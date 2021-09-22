@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: risk measure",
+            "type": "python",
+            "request": "launch",
+            "module": "main",
+        }
+    ]
+}
