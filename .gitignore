@@ -16,3 +16,6 @@ venv/
 
 # mypy
 .mypy_cache/
+
+# csv
+*.csv

@@ -39,14 +39,12 @@ def get_board_result_by_player(player, freq):
         raise KeyError("Player does not played")
 
     contract = result.get("contract")
+    score = result.get("score", -1)
     decl = result.get("decl")
 
-    if decl in direction:
-        score = result.get("score", -1)
-    else:
-        score = -result.get("score", -1)
+    mlplr = 1 if "N" in direction else -1 
 
-    return contract, decl, score
+    return contract, decl, score, mlplr
 
 
 if __name__ == "__main__":
@@ -56,12 +54,13 @@ if __name__ == "__main__":
     Reti_Zsuzsa = loveRequests.Player.create_by_name("Réti Zsuzsa")
 
     nb_boards = 32
-    statistics = np.zeros((nb_boards, 7))
 
     f = open("freqik.csv", "w")
     f.write(f"Optimal Score;")
     f.write(f"Contract {Budinszky_Andras.surname};Declarer {Budinszky_Andras.surname}; Score {Budinszky_Andras.surname};")
-    f.write(f"Contract {Reti_Zsuzsa.surname};Declarer {Reti_Zsuzsa.surname}; Score {Reti_Zsuzsa.surname};\n")
+    f.write(f"Contract {Reti_Zsuzsa.surname};Declarer {Reti_Zsuzsa.surname}; Score {Reti_Zsuzsa.surname};")
+    f.write(f"Diff {Budinszky_Andras.surname};Diff {Reti_Zsuzsa.surname};")
+    f.write(f"Gain;\n")
 
     for i in range(nb_boards):
         board_i = loveRequests.Board.create_by_bd_nb(i + 1)  # board misindexing
@@ -69,11 +68,13 @@ if __name__ == "__main__":
 
         freq_i = loveRequests.Freqi.create_by_team_id(RR.registrationId, i + 1)
 
-        contract_Andras_i, decl_Andras_i, score_Andras_i = get_board_result_by_player(player=Budinszky_Andras, freq=freq_i)
-        contract_Zsuzsa_i, decl_Zsuzsa_i, score_Zsuzsa_i = get_board_result_by_player(player=Reti_Zsuzsa, freq=freq_i)
+        contract_Andras_i, decl_Andras_i, score_Andras_i, mlplr_Andras_i = get_board_result_by_player(player=Budinszky_Andras, freq=freq_i)
+        contract_Zsuzsa_i, decl_Zsuzsa_i, score_Zsuzsa_i, mlplr_Zsuzsa_i = get_board_result_by_player(player=Reti_Zsuzsa, freq=freq_i)
 
         print(f"{i+1})", optimal_score, contract_Andras_i, decl_Andras_i, score_Andras_i, contract_Zsuzsa_i, decl_Zsuzsa_i, score_Zsuzsa_i)
 
-        f.write(f"{optimal_score};{contract_Andras_i};{decl_Andras_i};{score_Andras_i};{contract_Zsuzsa_i};{decl_Zsuzsa_i};{score_Zsuzsa_i};\n")
+        f.write(f"{optimal_score};{contract_Andras_i};{decl_Andras_i};{score_Andras_i};{contract_Zsuzsa_i};{decl_Zsuzsa_i};{score_Zsuzsa_i};")
+        f.write(f"{mlplr_Andras_i*(score_Andras_i-optimal_score)};{mlplr_Zsuzsa_i*(score_Zsuzsa_i-optimal_score)};")
+        f.write(f"{mlplr_Andras_i*(score_Andras_i-optimal_score) + mlplr_Zsuzsa_i*(score_Zsuzsa_i-optimal_score)};\n")
 
     f.close()
