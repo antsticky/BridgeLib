@@ -5,7 +5,7 @@
             "name": "Python: risk measure",
             "type": "python",
             "request": "launch",
-            "module": "main",
+            "module": "def_lead_example",
         }
     ]
 }

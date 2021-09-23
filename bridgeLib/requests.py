@@ -3,7 +3,8 @@ from collections import Counter
 
 # TODO: config file
 EVENT_CODE = "visoft_1798802_2_1"
-
+#DDS_CODE = "1797527" # Zsuzsa 
+#DDS_CODE = "1797530" # András
 
 class Reqest:
     headers = {"Content-type": "application/json", "Accept": "application/json"}
@@ -12,6 +13,7 @@ class Reqest:
     url_boards = f"https://vugraph.lovebridge.com/api/archive/boards/{EVENT_CODE}"
     url_freq_base = f"https://vugraph.lovebridge.com/api/archive/team-frequencies/{EVENT_CODE}/"
     url_watch_base = f"https://vugraph.lovebridge.com/api/archive/watch/{EVENT_CODE}/"
+    url_dds_base = f"https://vugraph.lovebridge.com/api/archive/dds-archive/{EVENT_CODE}/"
 
     def __init__(self):
         pass
@@ -172,6 +174,17 @@ class Watch:
                 print(is_made)
 
 
+class DDS:
+    def __init__(self, dictionary):
+        self.__dict__.update(dictionary)
+
+    @classmethod
+    def get_by_trick(cls, dds_code, bd_nb, trick_nb=1, seat_nb=1):
+        dds = Reqest.fetch(f"{Reqest.url_dds_base}{dds_code}/{bd_nb}/{trick_nb}/{seat_nb}")
+        
+        assert dds is not None, "DDS is not found"
+
+        return cls(dds)        
 ######################################
 ######################################
 # TODO: add DDS classes
