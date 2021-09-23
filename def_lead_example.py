@@ -106,7 +106,7 @@ if __name__ == "__main__":
         dec_aim_score_Andras = board_i.optimumScores.get("maxTricks").get(SEAT_DICT.get(decl_Andras_i)).get(COLOR_DICT.get(contract_Andras_i[-1]))
         prev_player_Andras_i = PREV_PLAYER_DICT.get(Budinszky_Andras.seat)
         if decl_Andras_i == prev_player_Andras_i:
-            print(f"{i+1}) Andras lead")
+            print(f"{i+1}) {Budinszky_Andras.name} lead")
             dds = loveRequests.DDS.get_by_trick(dds_code=1797530, bd_nb=i+1)
 
             max_results = -13
@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
         prev_player_Talycsi = PREV_PLAYER_DICT.get(Talyigas_Andras.seat)
         if decl_Andras_i == prev_player_Talycsi:
-            print(f"{i+1}) Talycsi lead")
+            print(f"{i+1}) {Talyigas_Andras.name} lead")
 
             dds = loveRequests.DDS.get_by_trick(dds_code=1797530, bd_nb=i+1)
 
@@ -144,7 +144,7 @@ if __name__ == "__main__":
         dec_aim_score_Zsuzsa = board_i.optimumScores.get("maxTricks").get(SEAT_DICT.get(decl_Zsuzsa_i)).get(COLOR_DICT.get(contract_Zsuzsa_i[-1]))
         prev_player_Zsuzsa_i = PREV_PLAYER_DICT.get(Reti_Zsuzsa.seat)
         if decl_Zsuzsa_i == prev_player_Zsuzsa_i:
-            print(f"{i+1}) Zsuzsa lead")
+            print(f"{i+1}) {Reti_Zsuzsa.name} lead")
             dds = loveRequests.DDS.get_by_trick(dds_code=1797527, bd_nb=i+1)
 
             max_results = -13
@@ -162,7 +162,7 @@ if __name__ == "__main__":
 
         prev_player_Fernci = PREV_PLAYER_DICT.get(Ferenci_Gyorgy.seat)
         if decl_Zsuzsa_i == prev_player_Fernci:
-            print(f"{i+1}) Frenci lead")
+            print(f"{i+1}) {Ferenci_Gyorgy.name} lead")
 
             dds = loveRequests.DDS.get_by_trick(dds_code=1797527, bd_nb=i+1)
 
