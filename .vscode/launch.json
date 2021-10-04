@@ -5,8 +5,8 @@
             "name": "Python: risk measure",
             "type": "python",
             "request": "launch",
-            "module": "def_lead_example",
-            //"module": "frekik_example",
+            //"module": "def_lead_example",
+            "module": "frekik_example",
         }
     ]
 }

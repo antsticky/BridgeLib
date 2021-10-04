@@ -2,9 +2,10 @@ import requests
 from collections import Counter
 
 # TODO: config file
-EVENT_CODE = "visoft_1798802_4_1" #"visoft_1798802_3_1" #"visoft_1798802_2_1"
-#DDS_CODE = "1797527" # Zsuzsa 
-#DDS_CODE = "1797530" # András
+EVENT_CODE = "visoft_1798802_4_1"  # "visoft_1798802_3_1" #"visoft_1798802_2_1"
+# DDS_CODE = "1797527" # Zsuzsa
+# DDS_CODE = "1797530" # András
+
 
 class Reqest:
     headers = {"Content-type": "application/json", "Accept": "application/json"}
@@ -181,20 +182,7 @@ class DDS:
     @classmethod
     def get_by_trick(cls, dds_code, bd_nb, trick_nb=1, seat_nb=1):
         dds = Reqest.fetch(f"{Reqest.url_dds_base}{dds_code}/{bd_nb}/{trick_nb}/{seat_nb}")
-        
+
         assert dds is not None, "DDS is not found"
 
-        return cls(dds)        
-######################################
-######################################
-# TODO: add DDS classes
-# https://vugraph.lovebridge.com/api/archive/watch/visoft_1799866_1_1/1797460/2
-# https://vugraph.lovebridge.com/api/archive/dds-archive/visoft_1799866_1_1/1797460/2/0/0
-# https://vugraph.lovebridge.com/api/archive/dds-archive/visoft_1799866_1_1/1797460/2/1/1
-# https://vugraph.lovebridge.com/api/archive/dds-archive/visoft_1799866_1_1/1797460/2/1/3
-#
-# url_dds = 'https://vugraph.lovebridge.com/api/archive/dds-archive/visoft_1799866_1_1/1797460/2/8/4' # board_num/trick/1-3
-# res5 = requests.get(url_dds, headers=Reqest.headers)
-# dds = res5.json() if res5.status_code == 200 else None
-######################################
-######################################
+        return cls(dds)
