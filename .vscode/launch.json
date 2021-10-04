@@ -6,6 +6,7 @@
             "type": "python",
             "request": "launch",
             "module": "def_lead_example",
+            //"module": "frekik_example",
         }
     ]
 }

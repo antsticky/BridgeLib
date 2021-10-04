@@ -49,15 +49,15 @@ if __name__ == "__main__":
     RR = loveRequests.Team.create_by_name("RR")
 
     Budinszky_Andras = loveRequests.Player.create_by_name("Budinszky András")
-    Reti_Zsuzsa = loveRequests.Player.create_by_name("Réti Zsuzsa")
+    Sinkovicz_Peter = loveRequests.Player.create_by_name("Sinkovicz Péter")
 
     nb_boards = 32
 
     f = open("freqik.csv", "w")
     f.write(f"Optimal Score;")
     f.write(f"Contract {Budinszky_Andras.surname};Declarer {Budinszky_Andras.surname}; Score {Budinszky_Andras.surname};")
-    f.write(f"Contract {Reti_Zsuzsa.surname};Declarer {Reti_Zsuzsa.surname}; Score {Reti_Zsuzsa.surname};")
-    f.write(f"Diff {Budinszky_Andras.surname};Diff {Reti_Zsuzsa.surname};")
+    f.write(f"Contract {Sinkovicz_Peter.surname};Declarer {Sinkovicz_Peter.surname}; Score {Sinkovicz_Peter.surname};")
+    f.write(f"Diff {Budinszky_Andras.surname};Diff {Sinkovicz_Peter.surname};")
     f.write(f"Gain;\n")
 
     for i in range(nb_boards):
@@ -67,7 +67,7 @@ if __name__ == "__main__":
         freq_i = loveRequests.Freqi.create_by_team_id(RR.registrationId, i + 1)
 
         contract_Andras_i, decl_Andras_i, score_Andras_i, mlplr_Andras_i = get_board_result_by_player(player=Budinszky_Andras, freq=freq_i)
-        contract_Zsuzsa_i, decl_Zsuzsa_i, score_Zsuzsa_i, mlplr_Zsuzsa_i = get_board_result_by_player(player=Reti_Zsuzsa, freq=freq_i)
+        contract_Zsuzsa_i, decl_Zsuzsa_i, score_Zsuzsa_i, mlplr_Zsuzsa_i = get_board_result_by_player(player=Sinkovicz_Peter, freq=freq_i)
 
         print(f"{i+1})", optimal_score, contract_Andras_i, decl_Andras_i, score_Andras_i, contract_Zsuzsa_i, decl_Zsuzsa_i, score_Zsuzsa_i)
 

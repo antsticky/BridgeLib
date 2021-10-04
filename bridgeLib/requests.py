@@ -2,7 +2,7 @@ import requests
 from collections import Counter
 
 # TODO: config file
-EVENT_CODE = "visoft_1798802_2_1"
+EVENT_CODE = "visoft_1798802_4_1" #"visoft_1798802_3_1" #"visoft_1798802_2_1"
 #DDS_CODE = "1797527" # Zsuzsa 
 #DDS_CODE = "1797530" # András
 

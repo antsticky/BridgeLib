@@ -59,6 +59,10 @@ def get_board_result_by_player(player, freq):
         raise KeyError("Player does not played")
 
     contract = result.get("contract")
+    if contract[-1] == "x":
+        contract = contract[0:-1]
+
+
     score = result.get("score", -1)
     decl = result.get("decl")
 
@@ -73,8 +77,10 @@ if __name__ == "__main__":
     Budinszky_Andras = loveRequests.Player.create_by_name("Budinszky András")
     Talyigas_Andras = loveRequests.Player.create_by_name("Talyigás András")
 
-    Reti_Zsuzsa = loveRequests.Player.create_by_name("Réti Zsuzsa")
-    Ferenci_Gyorgy = loveRequests.Player.create_by_name("Ferenci György")
+    #Reti_Zsuzsa = loveRequests.Player.create_by_name("Réti Zsuzsa")
+    #Ferenci_Gyorgy = loveRequests.Player.create_by_name("Ferenci György")
+    Sinkovicz_Peter = loveRequests.Player.create_by_name("Sinkovicz Péter")
+    Sinkovicz_Andrea = loveRequests.Player.create_by_name("Sinkovicz Andrea")
 
     f = open("def_lead.csv", "w")
     f.write(f"Board;Name;Optimal;After lead;\n")
@@ -91,14 +97,14 @@ if __name__ == "__main__":
         Budinszky_Andras.room = get_room_by_player(player=Budinszky_Andras, freq=freq_i)
         Talyigas_Andras.room = get_room_by_player(player=Talyigas_Andras, freq=freq_i)
 
-        Reti_Zsuzsa.room = get_room_by_player(player=Reti_Zsuzsa, freq=freq_i)
-        Ferenci_Gyorgy.room = get_room_by_player(player=Ferenci_Gyorgy, freq=freq_i)
+        Sinkovicz_Peter.room = get_room_by_player(player=Sinkovicz_Peter, freq=freq_i)
+        Sinkovicz_Andrea.room = get_room_by_player(player=Sinkovicz_Andrea, freq=freq_i)
 
         Budinszky_Andras.seat = get_player_seat(player=Budinszky_Andras, freq=freq_i)
         Talyigas_Andras.seat = get_player_seat(player=Talyigas_Andras, freq=freq_i)
 
-        Reti_Zsuzsa.seat = get_player_seat(player=Reti_Zsuzsa, freq=freq_i)
-        Ferenci_Gyorgy.seat = get_player_seat(player=Ferenci_Gyorgy, freq=freq_i)
+        Sinkovicz_Peter.seat = get_player_seat(player=Sinkovicz_Peter, freq=freq_i)
+        Sinkovicz_Andrea.seat = get_player_seat(player=Sinkovicz_Andrea, freq=freq_i)
 
         # ================================================
 
@@ -107,14 +113,17 @@ if __name__ == "__main__":
         prev_player_Andras_i = PREV_PLAYER_DICT.get(Budinszky_Andras.seat)
         if decl_Andras_i == prev_player_Andras_i:
             print(f"{i+1}) {Budinszky_Andras.name} lead")
-            dds = loveRequests.DDS.get_by_trick(dds_code=1797530, bd_nb=i+1)
+            dds = loveRequests.DDS.get_by_trick(dds_code=1797511, bd_nb=i+1)
 
             max_results = -13
             for poss in dds.solvedCards:
                 if poss.get("second") > max_results:
                     max_results = poss.get("second")
             
-            max_possible_trick = 6 + int(contract_Andras_i[0:-1]) + max_results
+            try:
+                max_possible_trick = 6 + int(contract_Andras_i[0:-1]) + max_results
+            except:
+                max_possible_trick = 6 + int(contract_Andras_i[0:-2]) + max_results
 
             print(dec_aim_score_Andras)
             print(max_possible_trick)
@@ -125,14 +134,17 @@ if __name__ == "__main__":
         if decl_Andras_i == prev_player_Talycsi:
             print(f"{i+1}) {Talyigas_Andras.name} lead")
 
-            dds = loveRequests.DDS.get_by_trick(dds_code=1797530, bd_nb=i+1)
+            dds = loveRequests.DDS.get_by_trick(dds_code=1797511, bd_nb=i+1)
 
             max_results = -13
             for poss in dds.solvedCards:
                 if poss.get("second") > max_results:
                     max_results = poss.get("second")
             
-            max_possible_trick = 6 + int(contract_Andras_i[0:-1]) + max_results
+            try:
+                max_possible_trick = 6 + int(contract_Andras_i[0:-1]) + max_results
+            except:
+                max_possible_trick = 6 + int(contract_Andras_i[0:-2]) + max_results
 
             print(dec_aim_score_Andras)
             print(max_possible_trick)
@@ -140,42 +152,48 @@ if __name__ == "__main__":
             f.write(f"{i+1};{Talyigas_Andras.name};{dec_aim_score_Andras};{max_possible_trick};\n")
 
 
-        contract_Zsuzsa_i, decl_Zsuzsa_i, score_Zsuzsa_i, mlplr_Zsuzsa_i = get_board_result_by_player(player=Reti_Zsuzsa, freq=freq_i)
+        contract_Zsuzsa_i, decl_Zsuzsa_i, score_Zsuzsa_i, mlplr_Zsuzsa_i = get_board_result_by_player(player=Sinkovicz_Peter, freq=freq_i)
         dec_aim_score_Zsuzsa = board_i.optimumScores.get("maxTricks").get(SEAT_DICT.get(decl_Zsuzsa_i)).get(COLOR_DICT.get(contract_Zsuzsa_i[-1]))
-        prev_player_Zsuzsa_i = PREV_PLAYER_DICT.get(Reti_Zsuzsa.seat)
+        prev_player_Zsuzsa_i = PREV_PLAYER_DICT.get(Sinkovicz_Peter.seat)
         if decl_Zsuzsa_i == prev_player_Zsuzsa_i:
-            print(f"{i+1}) {Reti_Zsuzsa.name} lead")
-            dds = loveRequests.DDS.get_by_trick(dds_code=1797527, bd_nb=i+1)
+            print(f"{i+1}) {Sinkovicz_Peter.name} lead")
+            dds = loveRequests.DDS.get_by_trick(dds_code=1797530, bd_nb=i+1)
 
             max_results = -13
             for poss in dds.solvedCards:
                 if poss.get("second") > max_results:
                     max_results = poss.get("second")
             
-            max_possible_trick = 6 + int(contract_Zsuzsa_i[0:-1]) + max_results
+            try:
+                max_possible_trick = 6 + int(contract_Zsuzsa_i[0:-1]) + max_results
+            except:
+                max_possible_trick = 6 + int(contract_Zsuzsa_i[0:-2]) + max_results
 
             print(dec_aim_score_Zsuzsa)
             print(max_possible_trick)
 
-            f.write(f"{i+1};{Reti_Zsuzsa.name};{dec_aim_score_Zsuzsa};{max_possible_trick};\n")
+            f.write(f"{i+1};{Sinkovicz_Peter.name};{dec_aim_score_Zsuzsa};{max_possible_trick};\n")
 
 
-        prev_player_Fernci = PREV_PLAYER_DICT.get(Ferenci_Gyorgy.seat)
+        prev_player_Fernci = PREV_PLAYER_DICT.get(Sinkovicz_Andrea.seat)
         if decl_Zsuzsa_i == prev_player_Fernci:
-            print(f"{i+1}) {Ferenci_Gyorgy.name} lead")
+            print(f"{i+1}) {Sinkovicz_Andrea.name} lead")
 
-            dds = loveRequests.DDS.get_by_trick(dds_code=1797527, bd_nb=i+1)
+            dds = loveRequests.DDS.get_by_trick(dds_code=1797530, bd_nb=i+1)
 
             max_results = -13
             for poss in dds.solvedCards:
                 if poss.get("second") > max_results:
                     max_results = poss.get("second")
-            
-            max_possible_trick = 6 + int(contract_Zsuzsa_i[0:-1]) + max_results
+
+            try:            
+                max_possible_trick = 6 + int(contract_Zsuzsa_i[0:-1]) + max_results
+            except:
+                max_possible_trick = 6 + int(contract_Zsuzsa_i[0:-2]) + max_results
 
             print(dec_aim_score_Zsuzsa)
             print(max_possible_trick)
 
-            f.write(f"{i+1};{Ferenci_Gyorgy.name};{dec_aim_score_Zsuzsa};{max_possible_trick};\n")
+            f.write(f"{i+1};{Sinkovicz_Andrea.name};{dec_aim_score_Zsuzsa};{max_possible_trick};\n")
 
     f.close()
