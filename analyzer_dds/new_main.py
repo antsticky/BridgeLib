@@ -1,4 +1,4 @@
-from main import Suit
+# from main import Suit
 
 
 class Card:
@@ -21,8 +21,10 @@ class Card:
         else:
             return self.__repr__()
 
-#__format__
-#__getnewargs__
+
+# __format__
+# __getnewargs__
+
 
 class Parent:
     def __init__(self, name, callbacks):
@@ -32,14 +34,16 @@ class Parent:
     def make_older(self):
         self.callbacks["age"]()
 
+
 class ChildA(Parent):
     def __init__(self, name, age):
-        super().__init__(name =name, callbacks={"age": self.pass_year})
+        super().__init__(name=name, callbacks={"age": self.pass_year})
 
         self.age = age
 
     def pass_year(self):
         self.age += 1
+
 
 class Time:
     def __init__(self, callbacks):
@@ -48,13 +52,14 @@ class Time:
     def pass_year(self):
         self.callbacks["age"](43)
 
+
 class ChildB:
     def __init__(self, name, age):
         self.time = Time(callbacks={"age": self.pass_year})
         self.name = name
         self.age = age
 
-    def pass_year(self, increment = 1):
+    def pass_year(self, increment=1):
         self.age += increment
 
 
@@ -69,9 +74,8 @@ if __name__ == "__main__":
     andi.time.pass_year()
     print(andi.age)
 
-    #peter.make_older()
-    #print(peter.age)
-
+    # peter.make_older()
+    # print(peter.age)
 
     # sp3 = Card(3, "spade")
     # sp5 = Card(5, "spade")
@@ -86,5 +90,3 @@ if __name__ == "__main__":
     # print(f"{sp3:ba2z}")
 
     pass
-
-
