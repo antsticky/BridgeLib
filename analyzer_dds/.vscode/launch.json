@@ -10,11 +10,7 @@
             "type": "python",
             "request": "launch",
             "module": "main_new_new",
-            //"module": "main_2",
-            //"module": "main_2", // kevert szagos ML
-            //"module": "main3", // kevert szagos SVM
-            //"module": "new_main",
-            //"module": "five_compoent_main",
+            //"module": "garbage_coll",
             "console": "integratedTerminal",
             // "args": [
             //     "--main_sensor_index", "0",

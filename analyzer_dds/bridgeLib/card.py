@@ -15,6 +15,12 @@ class CardSuit:
         else:
             raise KeyError("Unknown suit")
 
+    def __hash__(self):
+        return hash(self.name) ^ hash(self.value)
+
+    def __eq__(self, other):
+        return all([self.name == other.name, self.value == other.value])
+
     def __lt__(self, other):
         if not isinstance(other, CardSuit):
             raise NotImplementedError("other is not a CardSuit")
@@ -37,6 +43,9 @@ class CardValue:
         self.display_name = name
         self.rank = rank
 
+    def __eq__(self, other):
+        return all([self.display_name == other.display_name, self.rank == other.rank])
+
     def __gt__(self, other):
         if not isinstance(other, CardValue):
             raise NotImplementedError("other is not a CardValue")
@@ -56,6 +65,9 @@ class Card:
         self.value = value
         self.visible = visible
         self.played = played
+
+    def __eq__(self, other):
+        return all([self.suit == other.suit, self.value == other.value])
 
     def __gt__(self, other):
         if not isinstance(other, Card):

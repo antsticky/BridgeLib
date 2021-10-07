@@ -3,6 +3,27 @@ from bridgeLib.card import Card, CardSuit, CardValue
 SUIT_LIST = ["spade", "heart", "diamond", "club"]
 CARD_VALUE_LIST = [CardValue(f"{i+2}", i + 1) for i in range(8)] + [CardValue(f"{i}", j) for i, j in {"T": 9, "J": 10, "Q": 11, "K": 12, "A": 13}.items()]
 
+#TODO: move somewhere else
+def color_printer(txt, color="blue", end=""):
+    if color == "blue":
+        STARTC = '\033[94m'
+    elif color == "magenta":
+        STARTC = '\033[95m'
+    elif color == "cyan":
+        STARTC = '\033[96m'
+    elif color == "green":
+        STARTC = '\033[92m'
+    elif color == "yellow":
+        STARTC = '\033[93m'
+    elif color == "red":
+        STARTC = '\033[91m'
+    else:
+        STARTC = '\033[94m'
+
+    ENDC = '\033[0m'
+
+    print(STARTC + txt + ENDC, end="")
+
 
 class Deck:
     suits = [CardSuit(i) for i in SUIT_LIST]
@@ -35,28 +56,53 @@ class Deck:
         return max_len
 
     @staticmethod
-    def show_hand(hand, pre_space=0):
+    def show_hand(hand, pre_space=0, show_played=False):
         for suit in Deck.suits:
             if pre_space != 0:
                 print(pre_space * " ", end="")
             print(suit.short_name, end=": ")
             for card in hand[suit]:
-                print(card.value.display_name, end="")
+                if show_played:
+                    if card.played:
+                        color_printer(card.value.display_name)
+                    else:
+                        print(card.value.display_name, end="")
+                elif not card.played:
+                    print(card.value.display_name, end="")
+                else:
+                    print(" ", end="")
             print()
 
     @staticmethod
-    def show_hands(hand1, hand2, hand1_max_len=0, orientation="vertical", space=0):
+    def show_hands(hand1, hand2, hand1_max_len=0, orientation="vertical", space=0, show_played=False):
         if orientation == "horizontal":
             for suit in Deck.suits:
                 print(suit.short_name, end=": ")
                 for card in hand1[suit]:
-                    print(card.value.display_name, end="")
+                    if show_played:
+                        if card.played:
+                            color_printer(card.value.display_name)
+                        else:
+                            print(card.value.display_name, end="")
+                    elif not card.played:
+                        print(card.value.display_name, end="")
+                    else:
+                        print(" ", end="")
 
                 print((hand1_max_len - len(hand1[suit])) * " " + space * " ", end="")
 
                 print(suit.short_name, end=": ")
                 for card in hand2[suit]:
-                    print(card.value.display_name, end="")
+                    if show_played:
+                        if card.played:
+                            color_printer(card.value.display_name)
+                        else:
+                            print(card.value.display_name, end="")
+
+                    elif not card.played:
+                        print(card.value.display_name, end="")
+                    else:
+                        print(" ", end="")
 
                 print(end="\n")
 
@@ -67,13 +113,13 @@ class Deck:
         else:
             raise NotImplemented
 
-    def show(self):
+    def show(self, show_played=True):
         max_NS = max(Deck.get_hand_max_suit(self.N), Deck.get_hand_max_suit(self.S)) + 2
         max_W = Deck.get_hand_max_suit(self.W) + 3
 
-        Deck.show_hand(self.N, pre_space=max_W + 1)
-        Deck.show_hands(self.W, self.E, hand1_max_len=max_W, space=max_NS, orientation="horizontal")
-        Deck.show_hand(self.S, pre_space=max_W + 1)
+        Deck.show_hand(self.N, pre_space=max_W + 1, show_played=show_played)
+        Deck.show_hands(self.W, self.E, hand1_max_len=max_W, space=max_NS, orientation="horizontal", show_played=show_played)
+        Deck.show_hand(self.S, pre_space=max_W + 1, show_played=show_played)
 
     def sort(self, reverse=False):
         for attr in dir(self):
