@@ -56,7 +56,7 @@ class BidsClass:
 
         for bid_past, seat_past in self.bids:
             if seat_past in [cont_seat, pd]:
-                if bid_past.suit == cont_bid.suit:
+                if (bid_past.suit is not None) and (bid_past.suit == cont_bid.suit):
                     return seat_past
 
         raise ValueError("Dec. cannot be found")

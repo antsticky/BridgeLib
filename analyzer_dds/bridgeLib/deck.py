@@ -1,9 +1,10 @@
+from bridgeLib.seats import SeatDirections
 from bridgeLib.card import Card, CardSuit, CardValue
 
 SUIT_LIST = ["spade", "heart", "diamond", "club"]
 CARD_VALUE_LIST = [CardValue(f"{i+2}", i + 1) for i in range(8)] + [CardValue(f"{i}", j) for i, j in {"T": 9, "J": 10, "Q": 11, "K": 12, "A": 13}.items()]
 
-#TODO: move somewhere else
+# TODO: move somewhere else
 def color_printer(txt, color="blue", end=""):
     if color == "blue":
         STARTC = '\033[94m'
@@ -130,6 +131,49 @@ class Deck:
                         val[suit].sort(reverse=(not reverse))
                 except:
                     pass
+
+    def save(self, file_name, write_type="w", played_cards=True):
+        with open(file_name, write_type) as fp:
+            for seat in SeatDirections:
+                if seat.value == 1:
+                    fp.write(f"{seat.name}:")
+                else:
+                    fp.write(f";{seat.name}:")
+
+                hand = getattr(self, seat.name)
+                for suit in hand.keys():
+                    for card in hand[suit]:
+                        if played_cards:
+                            fp.write(f"{card.suit.short_name}{card.value.display_name}")
+                        else:
+                            if not card.played:
+                                fp.write(f"{card.suit.short_name}{card.value.display_name}")
+            fp.write("\n")
+
+    @staticmethod
+    def load(file_name, line_idx):
+        line_count = 0
+        with open(file_name) as file:
+            for line in file:
+                if line_count == line_idx:
+                    deck = {}
+                    for hand in line.replace("\n", "").split(";"):
+                        seat_name, cards = hand.split(":")
+                        deck[seat_name] = {k: [] for k in Deck.suits}
+
+                        for card in map(''.join, zip(*[iter(cards)] * 2)):
+                            suit_name, value_name = card[0], card[1]
+                            card_suit = CardSuit.create_by_short_name(suit_name)
+                            card_value = CardValue.create_by_display_name(value_name)
+                            card = Card(suit=card_suit, value=card_value)
+
+                            deck[seat_name][card_suit].append(card)
+
+                    return Deck(**deck)
+                else:
+                    line_count += 1
+
+        raise IndexError(f"Board {line_idx} cannot be fount in file {file_name}")
 
     @classmethod
     def shuffle(cls):

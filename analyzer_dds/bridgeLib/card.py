@@ -2,6 +2,19 @@ class CardSuit:
     def __init__(self, name):
         self.name = name
 
+    @classmethod
+    def create_by_short_name(cls, short_name):
+        if short_name.upper() == "S":
+            return cls("spade")
+        elif short_name.upper() == "H":
+            return cls("heart")
+        elif short_name.upper() == "D":
+            return cls("diamond")
+        elif short_name.upper() == "C":
+            return cls("club")
+        else:
+            raise KeyError("Short name cannot be found")
+
     @property
     def value(self):
         if self.name == "spade":
@@ -42,6 +55,23 @@ class CardValue:
     def __init__(self, name, rank):
         self.display_name = name
         self.rank = rank
+
+    @classmethod
+    def create_by_display_name(cls, display_name):
+        if display_name in [str(i+2) for i in range(8)]:
+            return cls(display_name, int(display_name)-1)
+        elif display_name == "T":
+            return cls(display_name, 9)
+        elif display_name == "J":
+            return cls(display_name, 10)
+        elif display_name == "Q":
+            return cls(display_name, 11)
+        elif display_name == "K":
+            return cls(display_name, 12)
+        elif display_name == "A":
+            return cls(display_name, 13)
+        
+        raise KeyError("Card cannot be found")
 
     def __eq__(self, other):
         return all([self.display_name == other.display_name, self.rank == other.rank])

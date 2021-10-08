@@ -4,7 +4,7 @@ from bridgeLib.card import Card, CardSuit, CardValue
 from bridgeLib.deck import Deck, SUIT_LIST, CARD_VALUE_LIST
 from bridgeLib.bid import BidsClass, Bid
 from bridgeLib.people import TablePlayers
-
+from bridgeLib.seats import SeatDirections
 
 class PhaseClass(Enum):
     NEW = "NEW"
@@ -14,24 +14,7 @@ class PhaseClass(Enum):
     ABORTED = "ABORTED"
 
 
-class SeatDirections(Enum):
-    N = 1
-    E = 2
-    S = 3
-    W = 4
 
-    @property
-    def partner(self):
-        if self.name == "N":
-            return SeatDirections.S
-        elif self.name == "E":
-            return SeatDirections.W
-        elif self.name == "S":
-            return SeatDirections.N
-        elif self.name == "W":
-            return SeatDirections.E
-        else:
-            raise KeyError("Cannot find partner")
 
 
 class Board:
@@ -78,9 +61,11 @@ class Board:
         else:
             print("Deal was alredy made, please use redeal")
 
-    def load(self):
-        #TODO: Implement this
-        raise NotImplementedError("NOT implemented")
+    def load_deck(self, file_name, line_idx = 0):
+        self.deck = Deck.load(file_name=file_name, line_idx=line_idx)
+        self.phase = PhaseClass.BID   
+        #TODO make reset actions when go back in phase function(cur_phase, new_phase)
+
 
     def redeal(self):
         #TODO: Implement this
