@@ -1,4 +1,4 @@
-import bridgeLib.requests as loveRequests
+import project.analytics.requests as loveRequests
 
 
 def get_room_by_player(player, freq):
@@ -40,7 +40,7 @@ def get_board_result_by_player(player, freq):
     score = result.get("score", -1)
     decl = result.get("decl")
 
-    mlplr = 1 if "N" in direction else -1 
+    mlplr = 1 if "N" in direction else -1
 
     return contract, decl, score, mlplr
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     nb_boards = 32
 
-    f = open("freqik.csv", "w")
+    f = open("misc/freqik.csv", "w")
     f.write(f"Optimal Score;")
     f.write(f"Contract {Budinszky_Andras.surname};Declarer {Budinszky_Andras.surname}; Score {Budinszky_Andras.surname};")
     f.write(f"Contract {Sinkovicz_Peter.surname};Declarer {Sinkovicz_Peter.surname}; Score {Sinkovicz_Peter.surname};")

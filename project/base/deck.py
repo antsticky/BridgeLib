@@ -1,5 +1,5 @@
-from bridgeLib.seats import SeatDirections
-from bridgeLib.card import Card, CardSuit, CardValue
+from project.base.seats import SeatDirections
+from project.base.card import Card, CardSuit, CardValue
 
 SUIT_LIST = ["spade", "heart", "diamond", "club"]
 CARD_VALUE_LIST = [CardValue(f"{i+2}", i + 1) for i in range(8)] + [CardValue(f"{i}", j) for i, j in {"T": 9, "J": 10, "Q": 11, "K": 12, "A": 13}.items()]
@@ -7,23 +7,23 @@ CARD_VALUE_LIST = [CardValue(f"{i+2}", i + 1) for i in range(8)] + [CardValue(f"
 # TODO: move somewhere else
 def color_printer(txt, color="blue", end=""):
     if color == "blue":
-        STARTC = '\033[94m'
+        STARTC = "\033[94m"
     elif color == "magenta":
-        STARTC = '\033[95m'
+        STARTC = "\033[95m"
     elif color == "cyan":
-        STARTC = '\033[96m'
+        STARTC = "\033[96m"
     elif color == "green":
-        STARTC = '\033[92m'
+        STARTC = "\033[92m"
     elif color == "yellow":
-        STARTC = '\033[93m'
+        STARTC = "\033[93m"
     elif color == "red":
-        STARTC = '\033[91m'
+        STARTC = "\033[91m"
     else:
-        STARTC = '\033[94m'
+        STARTC = "\033[94m"
 
-    ENDC = '\033[0m'
+    ENDC = "\033[0m"
 
-    print(STARTC + txt + ENDC, end="")
+    print(STARTC + txt + ENDC, end=end)
 
 
 class Deck:
@@ -161,7 +161,7 @@ class Deck:
                         seat_name, cards = hand.split(":")
                         deck[seat_name] = {k: [] for k in Deck.suits}
 
-                        for card in map(''.join, zip(*[iter(cards)] * 2)):
+                        for card in map("".join, zip(*[iter(cards)] * 2)):
                             suit_name, value_name = card[0], card[1]
                             card_suit = CardSuit.create_by_short_name(suit_name)
                             card_value = CardValue.create_by_display_name(value_name)

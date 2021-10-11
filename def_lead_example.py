@@ -1,4 +1,4 @@
-import bridgeLib.requests as loveRequests
+import project.analytics.requests as loveRequests
 
 SEAT_DICT = {"N": "NORTH", "S": "SOUTH", "W": "WEST", "E": "EAST"}
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
 
     players = [loveRequests.Player.create_by_name(player_name) for player_name in ["Budinszky András", "Talyigás András", "Sinkovicz Péter", "Sinkovicz Andrea"]]
 
-    f = open("def_lead.csv", "w")
+    f = open("misc/def_lead.csv", "w")
     f.write(f"Board;Name;Optimal;After lead;\n")
 
     nb_boards = 32

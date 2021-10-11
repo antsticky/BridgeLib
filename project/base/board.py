@@ -1,10 +1,11 @@
 from enum import Enum
 
-from bridgeLib.card import Card, CardSuit, CardValue
-from bridgeLib.deck import Deck, SUIT_LIST, CARD_VALUE_LIST
-from bridgeLib.bid import BidsClass, Bid
-from bridgeLib.people import TablePlayers
-from bridgeLib.seats import SeatDirections
+from project.base.card import Card, CardSuit, CardValue
+from project.base.deck import Deck, SUIT_LIST, CARD_VALUE_LIST
+from project.base.bid import BidsClass, Bid
+from project.base.people import TablePlayers
+from project.base.seats import SeatDirections
+
 
 class PhaseClass(Enum):
     NEW = "NEW"
@@ -14,15 +15,12 @@ class PhaseClass(Enum):
     ABORTED = "ABORTED"
 
 
-
-
-
 class Board:
     def __init__(self, board_nb, dealer):
         self.board_nb = board_nb  # board number
         self.dealer = SeatDirections[dealer]  # the player who starts
         self.phase = PhaseClass.NEW  # identificate the phase of the game NEW/BID/PLAY/END or ABORTED
-        #TODO: feed this for bidding and playing
+        # TODO: feed this for bidding and playing
         self.active_player = SeatDirections[dealer]
 
         self.players = None  # players must be seat first
@@ -61,14 +59,13 @@ class Board:
         else:
             print("Deal was alredy made, please use redeal")
 
-    def load_deck(self, file_name, line_idx = 0):
+    def load_deck(self, file_name, line_idx=0):
         self.deck = Deck.load(file_name=file_name, line_idx=line_idx)
-        self.phase = PhaseClass.BID   
-        #TODO make reset actions when go back in phase function(cur_phase, new_phase)
-
+        self.phase = PhaseClass.BID
+        # TODO make reset actions when go back in phase function(cur_phase, new_phase)
 
     def redeal(self):
-        #TODO: Implement this
+        # TODO: Implement this
         raise NotImplementedError("NOT implemented")
 
     def seating(self, N, S, E, W):
@@ -104,4 +101,3 @@ class Board:
         else:
             # TODO: be more concrete
             print("Not bidding phase...")
-

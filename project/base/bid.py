@@ -47,7 +47,7 @@ class BidsClass:
 
         if "board_contract" in self.callbacks.keys():
             self.callbacks.get("board_contract")(value)
-        
+
         if "set_phase" in self.callbacks.keys():
             self.callbacks.get("set_phase")("PLAY")
 
@@ -97,7 +97,7 @@ class BidsClass:
             self.is_rdbl = False
         ###############################
 
-        #TODO: check bid logics, is bid_old<bid_new and seat_old-seat_new = 1
+        # TODO: check bid logics, is bid_old<bid_new and seat_old-seat_new = 1
         self.bids.append((bid, seat))
 
         if self.nb_pass == 3:
@@ -113,8 +113,8 @@ class Bid:
             self.level = None
             self.suit = None
         else:
-            self.level = int(''.join([i for i in bid_str if i.isnumeric()]))
-            self.suit = BidSuit.from_str(''.join([i for i in bid_str if not i.isnumeric()]))
+            self.level = int("".join([i for i in bid_str if i.isnumeric()]))
+            self.suit = BidSuit.from_str("".join([i for i in bid_str if not i.isnumeric()]))
 
 
 class Contract:

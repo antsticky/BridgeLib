@@ -1,5 +1,5 @@
-from bridgeLib.people import Team, Player
-from bridgeLib.board import Board
+from project.base.people import Team, Player
+from project.base.board import Board
 
 if __name__ == "__main__":
     # ------ DEFINE SETUP ------
@@ -17,13 +17,13 @@ if __name__ == "__main__":
     board1.seating(N=Andi, S=Peter, E=Zsuzsa, W=Gyorgy)
 
     # ------ Deal ------
-    #board1.deal()
-    #board1.deck.sort()
-    #board1.deck.show()
-    #board1.deck.save(file_name="alma.txt",write_type="a")
+    # board1.deal()
+    # board1.deck.sort()
+    # board1.deck.show()
+    # board1.deck.save(file_name="misc/boards.txt",write_type="a")
 
-    board1.load_deck(file_name="alma.txt", line_idx=2)
-    #board1.deck.show()
+    board1.load_deck(file_name="misc/boards.txt", line_idx=2)
+    # board1.deck.show()
 
     # ------ Bid  ------
     board1.bid("1H", "W")
@@ -104,5 +104,4 @@ if __name__ == "__main__":
     board1.play("DQ", "N")
     board1.play("DJ", "E")
 
-    board1.deck.show(show_played=False)
-    
+    board1.deck.show(show_played=True)

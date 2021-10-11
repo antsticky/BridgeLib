@@ -58,8 +58,8 @@ class CardValue:
 
     @classmethod
     def create_by_display_name(cls, display_name):
-        if display_name in [str(i+2) for i in range(8)]:
-            return cls(display_name, int(display_name)-1)
+        if display_name in [str(i + 2) for i in range(8)]:
+            return cls(display_name, int(display_name) - 1)
         elif display_name == "T":
             return cls(display_name, 9)
         elif display_name == "J":
@@ -70,7 +70,7 @@ class CardValue:
             return cls(display_name, 12)
         elif display_name == "A":
             return cls(display_name, 13)
-        
+
         raise KeyError("Card cannot be found")
 
     def __eq__(self, other):

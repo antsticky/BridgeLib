@@ -1,5 +1,0 @@
-{
-    "python.formatting.provider": "black",
-    "python.formatting.blackArgs": ["-S", "--line-length", "200"],
-    //"python.formatting.yapfArgs": ["--style", "{based_on_style: chromium, indent_width: 20}"]
-}
