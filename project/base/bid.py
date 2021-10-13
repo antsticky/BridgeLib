@@ -104,6 +104,9 @@ class BidsClass:
             cont_bid, cont_seat = self.bids[-4]
             declarer = self.get_declarer(cont_seat, cont_bid)
             self.contract = Contract(declarer, cont_bid, self.is_dbl, self.is_rdbl)
+            self.callbacks.get("increase_active_player")(declarer)
+        else:
+            self.callbacks.get("increase_active_player")(seat)
 
 
 class Bid:

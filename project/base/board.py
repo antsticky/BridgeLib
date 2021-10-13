@@ -1,8 +1,9 @@
 from enum import Enum
+from os import stat
 
 from project.base.card import Card, CardSuit, CardValue
 from project.base.deck import Deck, SUIT_LIST, CARD_VALUE_LIST
-from project.base.bid import BidsClass, Bid
+from project.base.bid import BidsClass, Bid, BidSuit
 from project.base.people import TablePlayers
 from project.base.seats import SeatDirections
 
@@ -26,7 +27,7 @@ class Board:
         self.players = None  # players must be seat first
         self.deck = None  # must be deal first
 
-        self.bids = BidsClass(dealer=self.dealer, callbacks={"board_contract": self.set_contract, "set_phase": self.set_phase})
+        self.bids = BidsClass(dealer=self.dealer, callbacks={"board_contract": self.set_contract, "set_phase": self.set_phase, "increase_active_player": self.increase_active_player})
         self._contract = None  # bid first
         self.dds = None  # bid first
 
@@ -52,6 +53,35 @@ class Board:
     def set_phase(self, key):
         self.phase = PhaseClass(key)
 
+    def increase_active_player(self, seat):
+        if seat.value == 4:
+            self.active_player = SeatDirections(1)
+        else:
+            self.active_player = SeatDirections(seat.value + 1)
+
+    @staticmethod
+    def get_active_player_by_trick(tricks, trump):
+        lead_suit = tricks[0][1].suit
+        key_suits = [lead_suit] if trump == BidSuit.from_str("NT") else [lead_suit, trump]
+        my_trump = trump if trump != BidSuit.from_str("NT") else None
+
+        player_won = tricks[0][0]
+        card_won = tricks[0][1]
+        
+        for player, card in tricks:
+            if card.suit in key_suits:
+                if card_won.suit == card.suit:
+                    if card_won.value < card.value:
+                        card_won = card
+                        player_won = player
+                elif (my_trump is not None) and card.suit == trump:
+                    card_won = card
+                    player_won = player
+
+
+
+        return player_won
+
     def deal(self):
         if self.phase == PhaseClass.NEW:
             self.deck = Deck.shuffle()
@@ -72,7 +102,9 @@ class Board:
         self.players = TablePlayers(N=N, S=S, E=E, W=W)
 
     def bid(self, bid, seat):
-        if self.phase == PhaseClass.BID:
+        if self.active_player != SeatDirections[seat]:
+            print("It is not your turn")
+        elif self.phase == PhaseClass.BID:
             self.bids.bidding(Bid(bid), SeatDirections[seat])
         elif self.phase == PhaseClass.NEW:
             print("Deal first")
@@ -80,10 +112,12 @@ class Board:
             print("Bidding was already made")
 
     def play(self, card, seat):
-        if self.phase == PhaseClass.PLAY:
+        if self.active_player != SeatDirections[seat]:
+            print("It is not your turn")
+        elif self.phase == PhaseClass.PLAY:
             player = SeatDirections[seat]
             suit = CardSuit(list(filter(lambda x: x[0].upper() == card[0].upper(), SUIT_LIST))[0])
-            value = next(filter(lambda x: x.display_name.upper() == card[1:].upper(), CARD_VALUE_LIST))
+            value = list(filter(lambda x: x.display_name.upper() == card[1:].upper(), CARD_VALUE_LIST))[0]
             played_card = Card(suit, value)
 
             player_hand = getattr(self.deck, player.name)
@@ -98,6 +132,15 @@ class Board:
 
             list(filter(lambda x: x == played_card, player_suit_cards))[0].played = True
             self.plays.append((player, played_card))
+            
+            if len(self.plays) % 4 != 0:
+                self.increase_active_player(player)
+            else:
+                tricks = self.plays[-4:]
+                self.active_player = self.get_active_player_by_trick(tricks, self.contract.bid.suit)
+
+            print(f"{player.name} {played_card.suit.short_name}{played_card.value.display_name} {self.active_player.name}")
+
         else:
             # TODO: be more concrete
             print("Not bidding phase...")
