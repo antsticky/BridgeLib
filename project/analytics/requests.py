@@ -158,7 +158,11 @@ class Watch:
         level = contract.get("level", "")
 
         print(
-            f"||END||\nline (who we are watching): {line}\ntricks (dec): {tricks}\ndec (of the contract): {dec}\nlevel: {level}\nvalue (for us): {value}"
+            f"||END||\nline (who we are watching): {line}\
+            \ntricks (dec): {tricks}\
+            \ndec (of the contract): {dec}\
+            \nlevel: {level}\
+            \nvalue (for us): {value}"
         )
 
         # TODO: hard coded NS
