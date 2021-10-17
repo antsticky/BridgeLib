@@ -205,10 +205,11 @@ class Contract:
 
         return self.plain_make_value(tricks)
 
-    def base_value(self, suit_key, trick_level):
+    def base_value(self, suit_key, trick_level, level_mltpy = 1):
         base_value = 50
-        base_value += SUITVALUE[suit_key].value.FIRST.value
-        base_value += (trick_level - 1) * SUITVALUE[suit_key].value.SECOND.value
+
+        base_value += level_mltpy * SUITVALUE[suit_key].value.FIRST.value
+        base_value += level_mltpy * (trick_level - 1) * SUITVALUE[suit_key].value.SECOND.value
 
         return base_value
 
@@ -263,17 +264,28 @@ class Contract:
         over_tricks = tricks_level - self.bid.level
 
         suit_key = self.bid.suit.short
-        trick_level = tricks - BASE_TRICK
 
-        value = 2 * self.base_value(suit_key, trick_level)
+        value = 2 * self.base_value(suit_key, self.bid.level)
         value += over_tricks * over_trick_value
         value += self.bonus_value(suit_key, game_mlpy=2)
 
         return value
 
     def rdbl_make_value(self, tricks):
+        over_trick_value = 200 if self.vul == "NONVUL" else 400
+        success_penalty = 100
 
-        raise NotImplementedError
+        tricks_level = tricks - BASE_TRICK
+        over_tricks = tricks_level - self.bid.level
+
+        suit_key = self.bid.suit.short
+
+        value = self.base_value(suit_key, self.bid.level, level_mltpy=4)
+        value += success_penalty
+        value += over_tricks * over_trick_value
+        value += self.bonus_value(suit_key, game_mlpy=4)
+
+        return value
 
     def value(self, tricks=None):
         # TODO: hardcoded 6
