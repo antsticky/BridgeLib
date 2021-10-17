@@ -140,41 +140,53 @@ class Watch:
         trick_counter = 0
         for data in self.data:
             if data.get("topicType", "") == "PLAY_CARD":
-                card = data.get("payload", {}).get("card", "")
-                if show_play_card:
-                    if trick_counter % 4 == 0:
-                        print(f"{trick_counter // 4 + 1}) ", end="")
-                    print(f"{card[0]}:{card[1:]}", end=" ")
-                    trick_counter += 1
+                self.play_card_show(show_play_card, trick_counter, data)
             elif data.get("topicType", "") == "END_TRICK":
-                if data.get("payload", {}).get("wd", "") in ["E", "W"]:
-                    EW_tricks += 1
-                elif data.get("payload", {}).get("wd", "") in ["N", "S"]:
-                    NS_tricks += 1
-
-                if show_play_card:
-                    print(f"\t\tNS: {NS_tricks}, EW: {EW_tricks}", end="\n")
+                self.end_trick_show(show_play_card, NS_tricks, EW_tricks, data)
             elif data.get("topicType", "") == "CLAIM":
-                dir = data.get("payload", {}).get("dir", "")
-                tcount = data.get("payload", {}).get("tcount", "")
-                print(f"||CLAIM|| {dir}: {tcount} ")
+                self.claim_show(data)
             elif data.get("topicType", "") == "END_GAME":
-                line = data.get("payload", {}).get("line", "")
-                tricks = data.get("payload", {}).get("trick", "")
-                value = data.get("payload", {}).get("value", "")
+                self.end_game_show(data)
 
-                contract = data.get("payload", {}).get("contractDto", {})
-                dec = contract.get("dec", "")
-                level = contract.get("level", "")
+    def end_game_show(self, data):
+        line = data.get("payload", {}).get("line", "")
+        tricks = data.get("payload", {}).get("trick", "")
+        value = data.get("payload", {}).get("value", "")
 
-                print(
-                    f"||END||\nline (who we are watching): {line}\ntricks (dec): {tricks}\ndec (of the contract): {dec}\nlevel: {level}\nvalue (for us): {value}"
-                )
+        contract = data.get("payload", {}).get("contractDto", {})
+        dec = contract.get("dec", "")
+        level = contract.get("level", "")
 
-                # TODO: hard coded NS
-                tricks_needed = level + 5
-                is_made = "+++" if tricks_needed < tricks else "---"
-                print(is_made)
+        print(
+            f"||END||\nline (who we are watching): {line}\ntricks (dec): {tricks}\ndec (of the contract): {dec}\nlevel: {level}\nvalue (for us): {value}"
+        )
+
+        # TODO: hard coded NS
+        tricks_needed = level + 5
+        is_made = "+++" if tricks_needed < tricks else "---"
+        print(is_made)
+
+    def claim_show(self, data):
+        dir = data.get("payload", {}).get("dir", "")
+        tcount = data.get("payload", {}).get("tcount", "")
+        print(f"||CLAIM|| {dir}: {tcount} ")
+
+    def end_trick_show(self, show_play_card, NS_tricks, EW_tricks, data):
+        if data.get("payload", {}).get("wd", "") in ["E", "W"]:
+            EW_tricks += 1
+        elif data.get("payload", {}).get("wd", "") in ["N", "S"]:
+            NS_tricks += 1
+
+        if show_play_card:
+            print(f"\t\tNS: {NS_tricks}, EW: {EW_tricks}", end="\n")
+
+    def play_card_show(self, show_play_card, trick_counter, data):
+        card = data.get("payload", {}).get("card", "")
+        if show_play_card:
+            if trick_counter % 4 == 0:
+                print(f"{trick_counter // 4 + 1}) ", end="")
+            print(f"{card[0]}:{card[1:]}", end=" ")
+            trick_counter += 1
 
 
 class DDS:
