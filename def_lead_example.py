@@ -73,7 +73,7 @@ def check_open_lead(player, freq, board):
 
         try:
             max_possible_trick = 6 + int(contract[0:-1]) + max_results
-        except:
+        except IndexError:
             max_possible_trick = 6 + int(contract[0:-2]) + max_results
 
         print(f"possible tricks (initially) = {dec_aim_score}")

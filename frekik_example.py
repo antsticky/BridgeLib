@@ -54,11 +54,11 @@ if __name__ == "__main__":
     nb_boards = 32
 
     f = open("misc/freqik.csv", "w")
-    f.write(f"Optimal Score;")
+    f.write("Optimal Score;")
     f.write(f"Contract {Budinszky_Andras.surname};Declarer {Budinszky_Andras.surname}; Score {Budinszky_Andras.surname};")
     f.write(f"Contract {Sinkovicz_Peter.surname};Declarer {Sinkovicz_Peter.surname}; Score {Sinkovicz_Peter.surname};")
     f.write(f"Diff {Budinszky_Andras.surname};Diff {Sinkovicz_Peter.surname};")
-    f.write(f"Gain;\n")
+    f.write("Gain;\n")
 
     for i in range(nb_boards):
         board_i = loveRequests.Board.create_by_bd_nb(i + 1)  # board misindexing
