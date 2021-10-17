@@ -205,7 +205,7 @@ class Contract:
 
         return self.plain_make_value(tricks)
 
-    def base_value(self, suit_key, trick_level, level_mltpy = 1):
+    def base_value(self, suit_key, trick_level, level_mltpy=1):
         base_value = 50
 
         base_value += level_mltpy * SUITVALUE[suit_key].value.FIRST.value
