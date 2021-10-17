@@ -111,3 +111,24 @@ def test_5_level_plain_contracts(bid_level, vul, suits, is_dbl, is_rdbl, tricks,
     assert test_contracts[0].value(tricks) == expected[0]
     assert test_contracts[1].value(tricks) == expected[1]
     assert test_contracts[2].value(tricks) == expected[2]
+
+@pytest.mark.parametrize(
+    "bid_level,vul,suits,is_dbl,is_rdbl,tricks,expected",
+    [
+        (2, "NONVUL", ["C", "H", "NT"], True, False, 8, [180, 470, 490]),
+        (2, "NONVUL", ["C", "H", "NT"], True, False, 9, [280, 570, 590]),
+        (2, "NONVUL", ["C", "H", "NT"], True, False, 10, [380, 670, 690]),
+        (2, "NONVUL", ["C", "H", "NT"], True, False, 11, [480, 770, 790]),
+        (2, "NONVUL", ["C", "H", "NT"], True, False, 12, [580, 870, 890]),
+        (2, "NONVUL", ["C", "H", "NT"], True, False, 13, [680, 970, 990]),
+    ],
+)
+def test_2_level_dbl_contracts(bid_level, vul, suits, is_dbl, is_rdbl, tricks, expected):
+    test_contracts = []
+    for suit in suits:
+        contract_str = str(bid_level) + suit
+        test_contracts.append(Contract("N", Bid(contract_str), is_dbl, is_rdbl, vul))
+
+    assert test_contracts[0].value(tricks) == expected[0]
+    assert test_contracts[1].value(tricks) == expected[1]
+    assert test_contracts[2].value(tricks) == expected[2]
