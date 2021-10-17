@@ -94,6 +94,7 @@ def test_1_level_plain_contracts(bid_level, vul, suits, is_dbl, is_rdbl, tricks,
     assert test_contracts[1].value(tricks) == expected[1]
     assert test_contracts[2].value(tricks) == expected[2]
 
+
 @pytest.mark.parametrize(
     "bid_level,vul,suits,is_dbl,is_rdbl,tricks,expected",
     [
@@ -111,6 +112,7 @@ def test_5_level_plain_contracts(bid_level, vul, suits, is_dbl, is_rdbl, tricks,
     assert test_contracts[0].value(tricks) == expected[0]
     assert test_contracts[1].value(tricks) == expected[1]
     assert test_contracts[2].value(tricks) == expected[2]
+
 
 @pytest.mark.parametrize(
     "bid_level,vul,suits,is_dbl,is_rdbl,tricks,expected",
@@ -150,3 +152,69 @@ def test_6_level_rdbl_contracts(bid_level, vul, suits, is_dbl, is_rdbl, tricks, 
     assert test_contracts[0].value(tricks) == expected[0]
     assert test_contracts[1].value(tricks) == expected[1]
     assert test_contracts[2].value(tricks) == expected[2]
+
+
+@pytest.mark.parametrize(
+    "bid_level,vul,suit,is_dbl,is_rdbl,tricks,expected",
+    [
+        (3, "NONVUL", "C", False, False, 8, -50),
+        (3, "NONVUL", "C", False, False, 7, -100),
+        (3, "NONVUL", "C", False, False, 6, -150),
+        (3, "NONVUL", "C", False, False, 5, -200),
+        (3, "NONVUL", "C", False, False, 4, -250),
+        (3, "NONVUL", "C", False, False, 3, -300),
+        (3, "NONVUL", "C", False, False, 2, -350),
+        (3, "NONVUL", "C", False, False, 1, -400),
+        (3, "NONVUL", "C", False, False, 0, -450),
+        (3, "VUL", "C", False, False, 8, -100),
+        (3, "VUL", "C", False, False, 7, -200),
+        (3, "VUL", "C", False, False, 6, -300),
+        (3, "VUL", "C", False, False, 5, -400),
+        (3, "VUL", "C", False, False, 4, -500),
+        (3, "VUL", "C", False, False, 3, -600),
+        (3, "VUL", "C", False, False, 2, -700),
+        (3, "VUL", "C", False, False, 1, -800),
+        (3, "VUL", "C", False, False, 0, -900),
+        (3, "VUL", "C", True, False, 8, -200),
+        (3, "VUL", "C", True, False, 7, -500),
+        (3, "VUL", "C", True, False, 6, -800),
+        (3, "VUL", "C", True, False, 5, -1100),
+        (3, "VUL", "C", True, False, 4, -1400),
+        (3, "VUL", "C", True, False, 3, -1700),
+        (3, "VUL", "C", True, False, 2, -2000),
+        (3, "VUL", "C", True, False, 1, -2300),
+        (3, "VUL", "C", True, False, 0, -2600),
+        (3, "NONVUL", "C", True, False, 8, -100),
+        (3, "NONVUL", "C", True, False, 7, -300),
+        (3, "NONVUL", "C", True, False, 6, -500),
+        (3, "NONVUL", "C", True, False, 5, -800),
+        (3, "NONVUL", "C", True, False, 4, -1100),
+        (3, "NONVUL", "C", True, False, 3, -1400),
+        (3, "NONVUL", "C", True, False, 2, -1700),
+        (3, "NONVUL", "C", True, False, 1, -2000),
+        (3, "NONVUL", "C", True, False, 0, -2300),
+        (3, "VUL", "C", True, True, 8, -400),
+        (3, "VUL", "C", True, True, 7, -1000),
+        (3, "VUL", "C", True, True, 6, -1600),
+        (3, "VUL", "C", True, True, 5, -2200),
+        (3, "VUL", "C", True, True, 4, -2800),
+        (3, "VUL", "C", True, True, 3, -3400),
+        (3, "VUL", "C", True, True, 2, -4000),
+        (3, "VUL", "C", True, True, 1, -4600),
+        (3, "VUL", "C", True, True, 0, -5200),
+        (3, "NONVUL", "C", True, True, 8, -200),
+        (3, "NONVUL", "C", True, True, 7, -600),
+        (3, "NONVUL", "C", True, True, 6, -1000),
+        (3, "NONVUL", "C", True, True, 5, -1600),
+        (3, "NONVUL", "C", True, True, 4, -2200),
+        (3, "NONVUL", "C", True, True, 3, -2800),
+        (3, "NONVUL", "C", True, True, 2, -3400),
+        (3, "NONVUL", "C", True, True, 1, -4000),
+        (3, "NONVUL", "C", True, True, 0, -4600),
+    ],
+)
+def test_3_undertricks(bid_level, vul, suit, is_dbl, is_rdbl, tricks, expected):
+    contract_str = str(bid_level) + suit
+    test_contract = Contract("N", Bid(contract_str), is_dbl, is_rdbl, vul)
+
+    assert test_contract.value(tricks) == expected
