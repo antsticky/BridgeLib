@@ -136,24 +136,33 @@ class Board:
             player_hand = getattr(self.deck, player.name)
             player_suit_cards = player_hand[suit]
 
-            if played_card not in player_suit_cards:
-                print(f"Player {seat} does not holds the given card ({card})")
-                return -1
-            elif list(filter(lambda x: x == played_card, player_suit_cards))[0].played:
-                print(f"The card {card} is already played")
+            if not self.check_is_valid_play(card, seat, played_card, player_suit_cards):
                 return -1
 
-            list(filter(lambda x: x == played_card, player_suit_cards))[0].played = True
-            self.plays.append((player, played_card))
-
-            if len(self.plays) % 4 != 0:
-                self.increase_active_player(player)
-            else:
-                tricks = self.plays[-4:]
-                self.active_player = self.get_active_player_by_trick(tricks, self.contract.bid.suit)
-
-            print(f"{player.name} {played_card.suit.short_name}{played_card.value.display_name} {self.active_player.name}")
+            self.valid_play_actions(player, played_card, player_suit_cards)
 
         else:
             # TODO: be more concrete
             print("Not bidding phase...")
+
+    def valid_play_actions(self, player, played_card, player_suit_cards):
+        list(filter(lambda x: x == played_card, player_suit_cards))[0].played = True
+        self.plays.append((player, played_card))
+
+        if len(self.plays) % 4 != 0:
+            self.increase_active_player(player)
+        else:
+            tricks = self.plays[-4:]
+            self.active_player = self.get_active_player_by_trick(tricks, self.contract.bid.suit)
+
+        # print(f"{player.name} {played_card.suit.short_name}{played_card.value.display_name} {self.active_player.name}")
+
+    def check_is_valid_play(self, card, seat, played_card, player_suit_cards):
+        if played_card not in player_suit_cards:
+            print(f"Player {seat} does not holds the given card ({card})")
+            return False
+        elif list(filter(lambda x: x == played_card, player_suit_cards))[0].played:
+            print(f"The card {card} is already played")
+            return False
+
+        return True
