@@ -2,7 +2,9 @@ from project.base.seats import SeatDirections
 from project.base.card import Card, CardSuit, CardValue
 
 SUIT_LIST = ["spade", "heart", "diamond", "club"]
-CARD_VALUE_LIST = [CardValue(f"{i+2}", i + 1) for i in range(8)] + [CardValue(f"{i}", j) for i, j in {"T": 9, "J": 10, "Q": 11, "K": 12, "A": 13}.items()]
+CARD_VALUE_LIST = [CardValue(f"{i+2}", i + 1) for i in range(8)] + [
+    CardValue(f"{i}", j) for i, j in {"T": 9, "J": 10, "Q": 11, "K": 12, "A": 13}.items()
+]
 
 # TODO: move somewhere else
 def color_printer(txt, color="blue", end=""):

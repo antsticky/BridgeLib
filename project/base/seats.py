@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class SeatDirections(Enum):
     N = 1
     E = 2
