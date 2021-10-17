@@ -70,3 +70,44 @@ def test_minor_major_rdbl(bid_level, vul, suits, is_dbl, is_rdbl):
 
     for i in range(14):
         assert test_contracts[0].value(tricks=i) == test_contracts[1].value(tricks=i)
+
+
+@pytest.mark.parametrize(
+    "bid_level,vul,suits,is_dbl,is_rdbl,tricks,expected",
+    [
+        (1, "VUL", ["C", "H", "NT"], False, False, 7, [70, 80, 90]),
+        (1, "VUL", ["C", "H", "NT"], False, False, 8, [90, 110, 120]),
+        (1, "VUL", ["C", "H", "NT"], False, False, 9, [110, 140, 150]),
+        (1, "VUL", ["C", "H", "NT"], False, False, 10, [130, 170, 180]),
+        (1, "VUL", ["C", "H", "NT"], False, False, 11, [150, 200, 210]),
+        (1, "VUL", ["C", "H", "NT"], False, False, 12, [170, 230, 240]),
+        (1, "VUL", ["C", "H", "NT"], False, False, 13, [190, 260, 270]),
+    ],
+)
+def test_1_level_plain_contracts(bid_level, vul, suits, is_dbl, is_rdbl, tricks, expected):
+    test_contracts = []
+    for suit in suits:
+        contract_str = str(bid_level) + suit
+        test_contracts.append(Contract("N", Bid(contract_str), is_dbl, is_rdbl, vul))
+
+    assert test_contracts[0].value(tricks) == expected[0]
+    assert test_contracts[1].value(tricks) == expected[1]
+    assert test_contracts[2].value(tricks) == expected[2]
+
+@pytest.mark.parametrize(
+    "bid_level,vul,suits,is_dbl,is_rdbl,tricks,expected",
+    [
+        (5, "VUL", ["C", "H", "NT"], False, False, 11, [600, 650, 660]),
+        (5, "VUL", ["C", "H", "NT"], False, False, 12, [620, 680, 690]),
+        (5, "VUL", ["C", "H", "NT"], False, False, 13, [640, 710, 720]),
+    ],
+)
+def test_5_level_plain_contracts(bid_level, vul, suits, is_dbl, is_rdbl, tricks, expected):
+    test_contracts = []
+    for suit in suits:
+        contract_str = str(bid_level) + suit
+        test_contracts.append(Contract("N", Bid(contract_str), is_dbl, is_rdbl, vul))
+
+    assert test_contracts[0].value(tricks) == expected[0]
+    assert test_contracts[1].value(tricks) == expected[1]
+    assert test_contracts[2].value(tricks) == expected[2]
