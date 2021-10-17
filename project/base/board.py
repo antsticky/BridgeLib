@@ -34,6 +34,8 @@ class Board:
         self.tricks = None  # dict of {"N": [3, 4, 5], "E", "..."} where value gives then
         self.plays = []
 
+        #TODO: isvul ["NONVUL", "VUL"] set by board number
+        
         self.claim = None
 
     @property

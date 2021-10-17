@@ -1,6 +1,8 @@
 from project.base.people import Team, Player
 from project.base.board import Board
 
+#TODO: eliminated mutable default variables eg. mylist = []
+
 if __name__ == "__main__":
     # ------ DEFINE SETUP ------
     RR = Team("RR", 666)
@@ -36,6 +38,7 @@ if __name__ == "__main__":
     board1.bid("p", "E")
 
     print(board1.contract)
+
     board1.bids.show()
 
     # ------ Play ------
@@ -105,3 +108,6 @@ if __name__ == "__main__":
     board1.play("DJ", "E")
 
     board1.deck.show(show_played=True)
+
+
+    #print(board1.contract.value(tricks = 6))
