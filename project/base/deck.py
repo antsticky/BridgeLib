@@ -6,6 +6,7 @@ CARD_VALUE_LIST = [CardValue(f"{i+2}", i + 1) for i in range(8)] + [
     CardValue(f"{i}", j) for i, j in {"T": 9, "J": 10, "Q": 11, "K": 12, "A": 13}.items()
 ]
 
+
 # TODO: move somewhere else
 def color_printer(txt, color="blue", end=""):
     if color == "blue":
@@ -79,42 +80,50 @@ class Deck:
     @staticmethod
     def show_hands(hand1, hand2, hand1_max_len=0, orientation="vertical", space=0, show_played=False):
         if orientation == "horizontal":
-            for suit in Deck.suits:
-                print(suit.short_name, end=": ")
-                for card in hand1[suit]:
-                    if show_played:
-                        if card.played:
-                            color_printer(card.value.display_name)
-                        else:
-                            print(card.value.display_name, end="")
-                    elif not card.played:
-                        print(card.value.display_name, end="")
-                    else:
-                        print(" ", end="")
-
-                print((hand1_max_len - len(hand1[suit])) * " " + space * " ", end="")
-
-                print(suit.short_name, end=": ")
-                for card in hand2[suit]:
-                    if show_played:
-                        if card.played:
-                            color_printer(card.value.display_name)
-                        else:
-                            print(card.value.display_name, end="")
-
-                    elif not card.played:
-                        print(card.value.display_name, end="")
-                    else:
-                        print(" ", end="")
-
-                print(end="\n")
+            Deck.show_horizontal_hands(hand1, hand2, hand1_max_len, space, show_played)
 
         elif orientation == "vertical":
-            Deck.show_hand(hand1)
-            print(end="\n" * space)
-            Deck.show_hand(hand2)
+            Deck.show_vertical_hands(hand1, hand2, space)
         else:
-            raise NotImplemented
+            raise NotImplementedError
+
+    @staticmethod
+    def show_vertical_hands(hand1, hand2, space):
+        Deck.show_hand(hand1)
+        print(end="\n" * space)
+        Deck.show_hand(hand2)
+
+    @staticmethod
+    def show_horizontal_hands(hand1, hand2, hand1_max_len, space, show_played):
+        for suit in Deck.suits:
+            print(suit.short_name, end=": ")
+            for card in hand1[suit]:
+                if show_played:
+                    if card.played:
+                        color_printer(card.value.display_name)
+                    else:
+                        print(card.value.display_name, end="")
+                elif not card.played:
+                    print(card.value.display_name, end="")
+                else:
+                    print(" ", end="")
+
+            print((hand1_max_len - len(hand1[suit])) * " " + space * " ", end="")
+
+            print(suit.short_name, end=": ")
+            for card in hand2[suit]:
+                if show_played:
+                    if card.played:
+                        color_printer(card.value.display_name)
+                    else:
+                        print(card.value.display_name, end="")
+
+                elif not card.played:
+                    print(card.value.display_name, end="")
+                else:
+                    print(" ", end="")
+
+            print(end="\n")
 
     def show(self, show_played=True):
         max_NS = max(Deck.get_hand_max_suit(self.N), Deck.get_hand_max_suit(self.S)) + 2
@@ -131,7 +140,7 @@ class Deck:
                 try:
                     for suit in val:
                         val[suit].sort(reverse=(not reverse))
-                except:
+                except IndexError:
                     pass
 
     def save(self, file_name, write_type="w", played_cards=True):
