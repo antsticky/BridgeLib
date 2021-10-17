@@ -167,7 +167,9 @@ class Watch:
                 dec = contract.get("dec", "")
                 level = contract.get("level", "")
 
-                print(f"||END||\nline (who we are watching): {line}\ntricks (dec): {tricks}\ndec (of the contract): {dec}\nlevel: {level}\nvalue (for us): {value}")
+                print(
+                    f"||END||\nline (who we are watching): {line}\ntricks (dec): {tricks}\ndec (of the contract): {dec}\nlevel: {level}\nvalue (for us): {value}"
+                )
 
                 # TODO: hard coded NS
                 tricks_needed = level + 5
