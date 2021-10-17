@@ -132,3 +132,21 @@ def test_2_level_dbl_contracts(bid_level, vul, suits, is_dbl, is_rdbl, tricks, e
     assert test_contracts[0].value(tricks) == expected[0]
     assert test_contracts[1].value(tricks) == expected[1]
     assert test_contracts[2].value(tricks) == expected[2]
+
+
+@pytest.mark.parametrize(
+    "bid_level,vul,suits,is_dbl,is_rdbl,tricks,expected",
+    [
+        (6, "VUL", ["C", "H", "NT"], True, True, 12, [1830, 2070, 2110]),
+        (6, "VUL", ["C", "H", "NT"], True, True, 13, [2230, 2470, 2510]),
+    ],
+)
+def test_6_level_rdbl_contracts(bid_level, vul, suits, is_dbl, is_rdbl, tricks, expected):
+    test_contracts = []
+    for suit in suits:
+        contract_str = str(bid_level) + suit
+        test_contracts.append(Contract("N", Bid(contract_str), is_dbl, is_rdbl, vul))
+
+    assert test_contracts[0].value(tricks) == expected[0]
+    assert test_contracts[1].value(tricks) == expected[1]
+    assert test_contracts[2].value(tricks) == expected[2]
