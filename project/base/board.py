@@ -1,7 +1,6 @@
 from enum import Enum
-from os import stat
 
-from project.base.card import Card, CardSuit, CardValue
+from project.base.card import Card, CardSuit
 from project.base.deck import Deck, SUIT_LIST, CARD_VALUE_LIST
 from project.base.bid import BidsClass, Bid, BidSuit
 from project.base.people import TablePlayers
@@ -27,15 +26,18 @@ class Board:
         self.players = None  # players must be seat first
         self.deck = None  # must be deal first
 
-        self.bids = BidsClass(dealer=self.dealer, callbacks={"board_contract": self.set_contract, "set_phase": self.set_phase, "increase_active_player": self.increase_active_player})
+        self.bids = BidsClass(
+            dealer=self.dealer,
+            callbacks={"board_contract": self.set_contract, "set_phase": self.set_phase, "increase_active_player": self.increase_active_player},
+        )
         self._contract = None  # bid first
         self.dds = None  # bid first
 
         self.tricks = None  # dict of {"N": [3, 4, 5], "E", "..."} where value gives then
         self.plays = []
 
-        #TODO: isvul ["NONVUL", "VUL"] set by board number
-        
+        # TODO: isvul ["NONVUL", "VUL"] set by board number
+
         self.claim = None
 
     @property
@@ -69,7 +71,7 @@ class Board:
 
         player_won = tricks[0][0]
         card_won = tricks[0][1]
-        
+
         for player, card in tricks:
             if card.suit in key_suits:
                 if card_won.suit == card.suit:
@@ -79,8 +81,6 @@ class Board:
                 elif (my_trump is not None) and card.suit == trump:
                     card_won = card
                     player_won = player
-
-
 
         return player_won
 
@@ -134,7 +134,7 @@ class Board:
 
             list(filter(lambda x: x == played_card, player_suit_cards))[0].played = True
             self.plays.append((player, played_card))
-            
+
             if len(self.plays) % 4 != 0:
                 self.increase_active_player(player)
             else:
