@@ -6,7 +6,7 @@
     },
     "python.formatting.blackArgs": [
         "--line-length",
-        "150"
+        "200"
     ],
     "python.formatting.provider": "black",
 }

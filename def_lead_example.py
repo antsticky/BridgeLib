@@ -110,10 +110,7 @@ def get_board_result_by_player(player, freq):
 if __name__ == "__main__":
     RR = loveRequests.Team.create_by_name("RR")
 
-    players = [
-        loveRequests.Player.create_by_name(player_name)
-        for player_name in ["Budinszky András", "Talyigás András", "Sinkovicz Péter", "Sinkovicz Andrea"]
-    ]
+    players = [loveRequests.Player.create_by_name(player_name) for player_name in ["Budinszky András", "Talyigás András", "Sinkovicz Péter", "Sinkovicz Andrea"]]
 
     f = open("misc/def_lead.csv", "w")
     f.write("Board;Name;Optimal;After lead;\n")
