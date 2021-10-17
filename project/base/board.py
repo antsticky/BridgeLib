@@ -36,9 +36,20 @@ class Board:
         self.tricks = None  # dict of {"N": [3, 4, 5], "E", "..."} where value gives then
         self.plays = []
 
-        # TODO: isvul ["NONVUL", "VUL"] set by board number
-
         self.claim = None
+
+    @property
+    def is_vul(self):
+        # TODO: integrate to contract calculator
+        base_bd_nb = self.board_nb
+
+        while base_bd_nb > 16:
+            base_bd_nb -= 16
+
+        NS_vul = base_bd_nb in [2, 4, 5, 7, 10, 12, 13, 15]
+        EW_vul = base_bd_nb in [3, 4, 6, 7, 9, 10, 13, 16]
+
+        return {"N": NS_vul, "S": NS_vul, "E": EW_vul, "W": EW_vul}
 
     @property
     def contract(self):

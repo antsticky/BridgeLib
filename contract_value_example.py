@@ -1,7 +1,5 @@
 from project.base.bid import Contract, Bid
 
-# TODO: implement xx make calc
-# TODO: bug hunt for x and xx
 
 if __name__ == "__main__":
     bid_level = 2
