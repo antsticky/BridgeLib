@@ -162,6 +162,7 @@ class Board:
 
             if sum(self.nb_tricks.values()) == 13:
                 self.contract.decl_tricks = self.nb_tricks[self.active_player.name] + self.nb_tricks[self.active_player.partner.name]
+                self.phase == PhaseClass.END
 
     def check_is_valid_play(self, card, seat, played_card, player_suit_cards):
         if played_card not in player_suit_cards:
