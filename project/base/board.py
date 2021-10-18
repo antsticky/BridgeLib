@@ -25,10 +25,11 @@ class Board:
 
         self.players = None  # players must be seat first
         self.deck = None  # must be deal first
+        self.nb_tricks = None
 
         self.bids = BidsClass(
             dealer=self.dealer,
-            callbacks={"board_contract": self.set_contract, "set_phase": self.set_phase, "increase_active_player": self.increase_active_player},
+            callbacks={"board_contract": self.set_contract, "set_phase": self.set_phase, "increase_active_player": self.increase_active_player, "is_vul": self.is_vul},
         )
         self._contract = None  # bid first
         self.dds = None  # bid first
@@ -46,8 +47,8 @@ class Board:
         while base_bd_nb > 16:
             base_bd_nb -= 16
 
-        NS_vul = base_bd_nb in [2, 4, 5, 7, 10, 12, 13, 15]
-        EW_vul = base_bd_nb in [3, 4, 6, 7, 9, 10, 13, 16]
+        NS_vul = "VUL" if base_bd_nb in [2, 4, 5, 7, 10, 12, 13, 15] else "NONVUL"
+        EW_vul = "VUL" if base_bd_nb in [3, 4, 6, 7, 9, 10, 13, 16] else "NONVUL"
 
         return {"N": NS_vul, "S": NS_vul, "E": EW_vul, "W": EW_vul}
 
@@ -154,8 +155,12 @@ class Board:
         else:
             tricks = self.plays[-4:]
             self.active_player = self.get_active_player_by_trick(tricks, self.contract.bid.suit)
+            
+            if self.nb_tricks is None:
+                self.nb_tricks = {"N": 0, "E": 0, "W": 0, "S": 0}
+            self.nb_tricks[self.active_player.name] += 1
 
-        # print(f"{player.name} {played_card.suit.short_name}{played_card.value.display_name} {self.active_player.name}")
+
 
     def check_is_valid_play(self, card, seat, played_card, player_suit_cards):
         if played_card not in player_suit_cards:

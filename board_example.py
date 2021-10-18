@@ -107,5 +107,7 @@ if __name__ == "__main__":
 
     board1.deck.show(show_played=True)
 
+    print(board1.nb_tricks)
+
     # TODO: tricks must be calculated (not hard coded)
     print(board1.contract, board1.contract.value(tricks=9))

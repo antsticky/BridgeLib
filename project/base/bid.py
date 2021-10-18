@@ -152,7 +152,8 @@ class BidsClass:
         if self.nb_pass == 3:
             cont_bid, cont_seat = self.bids[-4]
             declarer = self.get_declarer(cont_seat, cont_bid)
-            self.contract = Contract(declarer, cont_bid, self.is_dbl, self.is_rdbl)
+            is_vul = self.callbacks.get("is_vul", {})[declarer.name]
+            self.contract = Contract(decl=declarer, bid=cont_bid, is_dbl=self.is_dbl, is_rdbl=self.is_rdbl, vul=is_vul)
             self.callbacks.get("increase_active_player")(declarer)
         else:
             self.callbacks.get("increase_active_player")(seat)
