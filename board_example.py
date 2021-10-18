@@ -2,6 +2,10 @@ from project.base.people import Team, Player
 from project.base.board import Board
 
 # TODO: eliminated mutable default variables eg. mylist = []
+# TODO: activate claim functionality
+# TODO: improve analytics
+# TODO: implement open lead checker
+# TODO: develop tournament functionality
 
 
 def define_players():
@@ -103,6 +107,7 @@ def do_play(board, is_show=True, show_played=True):
 if __name__ == "__main__":
     Zsuzsa, Gyorgy, Andi, Peter = define_players()
 
+    # TODO guess dealer from board number, can be overrid if needed
     board1 = Board(board_nb=1, dealer="W")
     board1.seating(N=Andi, S=Peter, E=Zsuzsa, W=Gyorgy)
 
