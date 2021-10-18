@@ -3,8 +3,8 @@ from project.base.board import Board
 
 # TODO: eliminated mutable default variables eg. mylist = []
 
-if __name__ == "__main__":
-    # ------ DEFINE SETUP ------
+
+def define_players():
     RR = Team("RR", 666)
 
     Zsuzsa = Player("Zsuzsa", "Réti Zsuzsa", team=RR)
@@ -13,98 +13,109 @@ if __name__ == "__main__":
     Andi = Player("Andi", "Sinkovicz Andrea", team=RR)
     Peter = Player("Peter", "Sinkovicz Péter", team=RR)
 
-    board1 = Board(board_nb=1, dealer="W")
+    return Zsuzsa, Gyorgy, Andi, Peter
 
-    # ------ Seating ------
+
+def do_bid(board, is_show=True):
+    board.bid("1H", "W")
+    board.bid("x", "N")
+    board.bid("2H", "E")
+    board.bid("2NT", "S")
+
+    board.bid("p", "W")
+    board.bid("p", "N")
+    board.bid("p", "E")
+
+    if is_show:
+        board.bids.show()
+
+
+def do_play(board, is_show=True, show_played=True):
+    board.play("H5", "W")
+    board.play("HT", "N")
+    board.play("HJ", "E")
+    board.play("HA", "S")
+
+    board.play("S5", "S")
+    board.play("ST", "W")
+    board.play("S2", "N")
+    board.play("S3", "E")
+
+    board.play("H4", "W")
+    board.play("HK", "N")
+    board.play("H8", "E")
+    board.play("H2", "S")
+
+    board.play("S7", "N")
+    board.play("S4", "E")
+    board.play("SK", "S")
+    board.play("SJ", "W")
+
+    board.play("S9", "S")
+    board.play("SQ", "W")
+    board.play("SA", "N")
+    board.play("S6", "E")
+
+    board.play("S8", "N")
+    board.play("C5", "E")
+    board.play("D3", "S")
+    board.play("D2", "W")
+
+    board.play("DK", "N")
+    board.play("DA", "E")
+    board.play("D4", "S")
+    board.play("C9", "W")
+
+    board.play("H7", "E")
+    board.play("D5", "S")
+    board.play("HQ", "W")
+    board.play("D6", "N")
+
+    board.play("H9", "W")
+    board.play("C2", "N")
+    board.play("C7", "E")
+    board.play("C4", "S")
+
+    board.play("H6", "W")
+    board.play("C3", "N")
+    board.play("CJ", "E")
+    board.play("C6", "S")
+
+    board.play("H3", "W")
+    board.play("D9", "N")
+    board.play("D8", "E")
+    board.play("C8", "S")
+
+    board.play("CK", "W")
+    board.play("CT", "N")
+    board.play("DT", "E")
+    board.play("CA", "S")
+
+    board.play("D7", "S")
+    board.play("CQ", "W")
+    board.play("DQ", "N")
+    board.play("DJ", "E")
+
+    if is_show:
+        board.deck.show(show_played=show_played)
+
+
+if __name__ == "__main__":
+    Zsuzsa, Gyorgy, Andi, Peter = define_players()
+
+    board1 = Board(board_nb=1, dealer="W")
     board1.seating(N=Andi, S=Peter, E=Zsuzsa, W=Gyorgy)
 
     # ------ Deal ------
     # board1.deal()
     # board1.deck.sort()
-    # board1.deck.show()
+    board1.load_deck(file_name="misc/boards.txt", line_idx=2)
     # board1.deck.save(file_name="misc/boards.txt",write_type="a")
 
-    board1.load_deck(file_name="misc/boards.txt", line_idx=2)
-    # board1.deck.show()
-
     # ------ Bid  ------
-    board1.bid("1H", "W")
-    board1.bid("x", "N")
-    board1.bid("2H", "E")
-    board1.bid("2NT", "S")
-
-    board1.bid("p", "W")
-    board1.bid("p", "N")
-    board1.bid("p", "E")
-
-    board1.bids.show()
+    do_bid(board=board1)
 
     # ------ Play ------
-    board1.play("H5", "W")
-    board1.play("HT", "N")
-    board1.play("HJ", "E")
-    board1.play("HA", "S")
-
-    board1.play("S5", "S")
-    board1.play("ST", "W")
-    board1.play("S2", "N")
-    board1.play("S3", "E")
-
-    board1.play("H4", "W")
-    board1.play("HK", "N")
-    board1.play("H8", "E")
-    board1.play("H2", "S")
-
-    board1.play("S7", "N")
-    board1.play("S4", "E")
-    board1.play("SK", "S")
-    board1.play("SJ", "W")
-
-    board1.play("S9", "S")
-    board1.play("SQ", "W")
-    board1.play("SA", "N")
-    board1.play("S6", "E")
-
-    board1.play("S8", "N")
-    board1.play("C5", "E")
-    board1.play("D3", "S")
-    board1.play("D2", "W")
-
-    board1.play("DK", "N")
-    board1.play("DA", "E")
-    board1.play("D4", "S")
-    board1.play("C9", "W")
-
-    board1.play("H7", "E")
-    board1.play("D5", "S")
-    board1.play("HQ", "W")
-    board1.play("D6", "N")
-
-    board1.play("H9", "W")
-    board1.play("C2", "N")
-    board1.play("C7", "E")
-    board1.play("C4", "S")
-
-    board1.play("H6", "W")
-    board1.play("C3", "N")
-    board1.play("CJ", "E")
-    board1.play("C6", "S")
-
-    board1.play("H3", "W")
-    board1.play("D9", "N")
-    board1.play("D8", "E")
-    board1.play("C8", "S")
-
-    board1.play("CK", "W")
-    board1.play("CT", "N")
-    board1.play("DT", "E")
-    board1.play("CA", "S")
-
-    board1.play("D7", "S")
-    board1.play("CQ", "W")
-    board1.play("DQ", "N")
-    board1.play("DJ", "E")
-
-    board1.deck.show(show_played=True)
+    do_play(board=board1)
 
     print(board1.contract, board1.contract.value())
