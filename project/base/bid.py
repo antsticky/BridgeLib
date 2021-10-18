@@ -182,8 +182,21 @@ class Contract:
             raise ValueError("score must be one of NONVUL or VUL")
 
         self.vul = vul
-
+        self._decl_tricks = None
         # add overtricks, trick_level, bidkey, etc here
+
+    def get_decl_tricks(self):
+        if self._decl_tricks is None:
+            raise ValueError("No tricks ara available")
+        return self._decl_tricks
+
+    def set_decl_tricks(self, direction_tricks):
+        if direction_tricks < 0 or direction_tricks > 13:
+            raise ValueError
+
+        self._decl_tricks = direction_tricks
+
+    decl_tricks = property(get_decl_tricks, set_decl_tricks)
 
     def bonus_value(self, suit_key, game_mlpy=1):
         bonus_value = 0
@@ -290,7 +303,12 @@ class Contract:
 
     def value(self, tricks=None):
         # TODO: hardcoded 6
-        tricks = (self.bid.level + BASE_TRICK) if tricks is None else tricks
+        if tricks is not None:
+            pass
+        elif self.decl_tricks is not None:
+            tricks = self.decl_tricks
+        else:
+            tricks = self.bid.level + BASE_TRICK
 
         if tricks < (self.bid.level + BASE_TRICK):
             return self.undertrick_value(self.bid.level + BASE_TRICK - tricks)

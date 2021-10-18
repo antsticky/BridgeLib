@@ -109,5 +109,4 @@ if __name__ == "__main__":
 
     print(board1.nb_tricks)
 
-    # TODO: tricks must be calculated (not hard coded)
-    print(board1.contract, board1.contract.value(tricks=9))
+    print(board1.contract, board1.contract.value())

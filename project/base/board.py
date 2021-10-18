@@ -155,12 +155,13 @@ class Board:
         else:
             tricks = self.plays[-4:]
             self.active_player = self.get_active_player_by_trick(tricks, self.contract.bid.suit)
-            
+
             if self.nb_tricks is None:
                 self.nb_tricks = {"N": 0, "E": 0, "W": 0, "S": 0}
             self.nb_tricks[self.active_player.name] += 1
 
-
+            if sum(self.nb_tricks.values()) == 13:
+                self.contract.decl_tricks = self.nb_tricks[self.active_player.name] + self.nb_tricks[self.active_player.partner.name]
 
     def check_is_valid_play(self, card, seat, played_card, player_suit_cards):
         if played_card not in player_suit_cards:
