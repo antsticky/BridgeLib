@@ -8,34 +8,50 @@ from project.base.seats import Seat
 
 
 class PhaseClass(Enum):
-    NEW = "NEW"
-    BID = "BID"
-    PLAY = "PLAY"
-    END = "END"
-    ABORTED = "ABORTED"
+    NEW = 0
+    BID = 1
+    PLAY = 2
+    END = 3
+    ABORTED = 4
+
+    def __lt__(self, other):
+        if not isinstance(other, PhaseClass):
+            raise NotImplementedError("other is not a PhaseClass")
+
+        return self.value < other.value
+
+    def __gt__(self, other):
+        if not isinstance(other, PhaseClass):
+            raise NotImplementedError("other is not a PhaseClass")
+
+        return self.value > other.value
+
+    def __eq__(self, other):
+        if not isinstance(other, PhaseClass):
+            raise NotImplementedError("other is not a PhaseClass")
+
+        return self.value == other.value
 
 
 class Board:
-    def __init__(self, board_nb, dealer):
-        self.board_nb = board_nb  # board number
-        self.dealer = Seat[dealer]  # the player who starts
-        self.phase = PhaseClass.NEW  # identificate the phase of the game NEW/BID/PLAY/END or ABORTED
-        # TODO: feed this for bidding and playing
-        self.active_player = Seat[dealer]
+    def __init__(self, board_nb, dealer=None):
+        self.phase = PhaseClass.NEW
+        self.board_nb = board_nb
+        self.players = None
 
-        self.players = None  # players must be seat first
-        self.deck = None  # must be deal first
-        self.nb_tricks = None
+        self.dealer = Seat[dealer] if dealer is not None else Seat(board_nb % 4 or 4)
+        self.active_player = self.dealer
 
+        self.deck = None
         self.bids = BidsClass(
             dealer=self.dealer,
             callbacks={"board_contract": self.set_contract, "set_phase": self.set_phase, "increase_active_player": self.increase_active_player, "is_vul": self.is_vul},
         )
-        self._contract = None  # bid first
-        self.dds = None  # bid first
+        self._contract = None
+        self.dds = None
 
-        self.tricks = None  # dict of {"N": [3, 4, 5], "E", "..."} where value gives then
-        self.plays = []
+        self.plays = None
+        self.nb_tricks = None
 
         self.claim = None
 
@@ -54,7 +70,7 @@ class Board:
 
     @property
     def contract(self):
-        if self._contract is None:
+        if self.phase < PhaseClass.PLAY:
             raise ValueError("Do bidding first")
 
         return self._contract
@@ -67,24 +83,20 @@ class Board:
         self._contract = value
 
     def set_phase(self, key):
-        self.phase = PhaseClass(key)
+        self.phase = PhaseClass[key]
 
     def increase_active_player(self, seat):
-        if seat.value == 4:
-            self.active_player = Seat(1)
-        else:
-            self.active_player = Seat(seat.value + 1)
+        self.active_player = next(seat)
 
     @staticmethod
-    def get_active_player_by_trick(tricks, trump):
-        lead_suit = tricks[0][1].suit
+    def get_active_player_by_trick(trick, trump):
+        player_won, card_won = trick[0]
+        lead_suit = card_won.suit
+
         key_suits = [lead_suit] if trump == BidSuit.from_str("NT") else [lead_suit, trump]
         my_trump = trump if trump != BidSuit.from_str("NT") else None
 
-        player_won = tricks[0][0]
-        card_won = tricks[0][1]
-
-        for player, card in tricks:
+        for player, card in trick:
             if card.suit in key_suits:
                 if card_won.suit == card.suit:
                     if card_won.value < card.value:
@@ -148,21 +160,36 @@ class Board:
 
     def valid_play_actions(self, player, played_card, player_suit_cards):
         list(filter(lambda x: x == played_card, player_suit_cards))[0].played = True
-        self.plays.append((player, played_card))
+
+        self.store_play(player, played_card)
 
         if len(self.plays) % 4 != 0:
             self.increase_active_player(player)
         else:
-            tricks = self.plays[-4:]
-            self.active_player = self.get_active_player_by_trick(tricks, self.contract.bid.suit)
+            trick = self.plays[-4:]
 
-            if self.nb_tricks is None:
-                self.nb_tricks = {"N": 0, "E": 0, "W": 0, "S": 0}
-            self.nb_tricks[self.active_player.name] += 1
+            active_player = self.get_active_player_by_trick(trick, self.contract.bid.suit)
+
+            self.active_player = active_player
+            self.update_nb_tricks(active_player)
 
             if sum(self.nb_tricks.values()) == 13:
-                self.contract.decl_tricks = self.nb_tricks[self.active_player.name] + self.nb_tricks[self.active_player.partner.name]
-                self.phase == PhaseClass.END
+                self.close_play_phase(active_player)
+
+    def close_play_phase(self, active_player):
+        self.contract.decl_tricks = self.nb_tricks[active_player.name] + self.nb_tricks[active_player.partner.name]
+        self.phase = PhaseClass.END
+
+    def update_nb_tricks(self, active_player):
+        if self.nb_tricks is None:
+            self.nb_tricks = {"N": 0, "E": 0, "W": 0, "S": 0}
+        self.nb_tricks[active_player.name] += 1
+
+    def store_play(self, player, played_card):
+        if self.plays is None:
+            self.plays = []
+
+        self.plays.append((player, played_card))
 
     def check_is_valid_play(self, card, seat, played_card, player_suit_cards):
         if played_card not in player_suit_cards:
