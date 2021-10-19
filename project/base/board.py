@@ -45,7 +45,7 @@ class Board:
         self.deck = None
         self.bids = BidsClass(
             dealer=self.dealer,
-            callbacks={"board_contract": self.set_contract, "set_phase": self.set_phase, "increase_active_player": self.increase_active_player, "is_vul": self.is_vul},
+            callbacks={"board_contract": self.set_contract, "set_phase": self.set_phase_by_key, "increase_active_player": self.increase_active_player, "is_vul": self.is_vul},
         )
         self._contract = None
         self.dds = None
@@ -82,7 +82,7 @@ class Board:
     def set_contract(self, value):
         self._contract = value
 
-    def set_phase(self, key):
+    def set_phase_by_key(self, key):
         self.phase = PhaseClass[key]
 
     def increase_active_player(self, seat):
@@ -111,7 +111,7 @@ class Board:
     def deal(self):
         if self.phase == PhaseClass.NEW:
             self.deck = Deck.shuffle()
-            self.set_phase("BID")
+            self.set_phase_by_key("BID")
         else:
             print("Deal was alredy made, please use redeal")
 
