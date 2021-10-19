@@ -4,7 +4,7 @@ from project.base.card import Card, CardSuit
 from project.base.deck import Deck, SUIT_LIST, CARD_VALUE_LIST
 from project.base.bid import BidsClass, Bid, BidSuit
 from project.base.people import TablePlayers
-from project.base.seats import SeatDirections
+from project.base.seats import Seat
 
 
 class PhaseClass(Enum):
@@ -18,10 +18,10 @@ class PhaseClass(Enum):
 class Board:
     def __init__(self, board_nb, dealer):
         self.board_nb = board_nb  # board number
-        self.dealer = SeatDirections[dealer]  # the player who starts
+        self.dealer = Seat[dealer]  # the player who starts
         self.phase = PhaseClass.NEW  # identificate the phase of the game NEW/BID/PLAY/END or ABORTED
         # TODO: feed this for bidding and playing
-        self.active_player = SeatDirections[dealer]
+        self.active_player = Seat[dealer]
 
         self.players = None  # players must be seat first
         self.deck = None  # must be deal first
@@ -71,9 +71,9 @@ class Board:
 
     def increase_active_player(self, seat):
         if seat.value == 4:
-            self.active_player = SeatDirections(1)
+            self.active_player = Seat(1)
         else:
-            self.active_player = SeatDirections(seat.value + 1)
+            self.active_player = Seat(seat.value + 1)
 
     @staticmethod
     def get_active_player_by_trick(tricks, trump):
@@ -116,20 +116,20 @@ class Board:
         self.players = TablePlayers(N=N, S=S, E=E, W=W)
 
     def bid(self, bid, seat):
-        if self.active_player != SeatDirections[seat]:
+        if self.active_player != Seat[seat]:
             print("It is not your turn")
         elif self.phase == PhaseClass.BID:
-            self.bids.bidding(Bid(bid), SeatDirections[seat])
+            self.bids.bidding(Bid(bid), Seat[seat])
         elif self.phase == PhaseClass.NEW:
             print("Deal first")
         else:
             print("Bidding was already made")
 
     def play(self, card, seat):
-        if self.active_player != SeatDirections[seat]:
+        if self.active_player != Seat[seat]:
             print("It is not your turn")
         elif self.phase == PhaseClass.PLAY:
-            player = SeatDirections[seat]
+            player = Seat[seat]
             suit = CardSuit(list(filter(lambda x: x[0].upper() == card[0].upper(), SUIT_LIST))[0])
             value = list(filter(lambda x: x.display_name.upper() == card[1:].upper(), CARD_VALUE_LIST))[0]
             played_card = Card(suit, value)

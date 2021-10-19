@@ -1,4 +1,4 @@
-from project.base.seats import SeatDirections
+from project.base.seats import Seat
 from project.base.card import Card, CardSuit, CardValue
 
 SUIT_LIST = ["spade", "heart", "diamond", "club"]
@@ -145,7 +145,7 @@ class Deck:
 
     def save(self, file_name, write_type="w", played_cards=True):
         with open(file_name, write_type) as fp:
-            for seat in SeatDirections:
+            for seat in Seat:
                 if seat.value == 1:
                     fp.write(f"{seat.name}:")
                 else:

@@ -1,21 +1,38 @@
 from enum import Enum
 
 
-class SeatDirections(Enum):
+class Seat(Enum):
     N = 1
     E = 2
     S = 3
     W = 4
+    
+    def __next__(self):
+        if self.value < 4:
+            return Seat(self.value + 1)
+        elif self.value == 4:
+            return Seat(1)
+        else:
+            raise KeyError("Cannot find Seat")
 
     @property
     def partner(self):
         if self.name == "N":
-            return SeatDirections.S
+            return Seat.S
         elif self.name == "E":
-            return SeatDirections.W
+            return Seat.W
         elif self.name == "S":
-            return SeatDirections.N
+            return Seat.N
         elif self.name == "W":
-            return SeatDirections.E
+            return Seat.E
         else:
             raise KeyError("Cannot find partner")
+
+    @property
+    def direction(self):
+        if self.name in ["N", "S"]:
+            return [Seat.N, Seat.S]
+        elif self.name in ["E", "W"]:
+            return [Seat.E, Seat.W]
+        else:
+            raise KeyError("Seat cannot be found")
