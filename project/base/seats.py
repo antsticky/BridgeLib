@@ -6,7 +6,7 @@ class Seat(Enum):
     E = 2
     S = 3
     W = 4
-    
+
     def __next__(self):
         if self.value < 4:
             return Seat(self.value + 1)
