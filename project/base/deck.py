@@ -1,11 +1,6 @@
 from project.base.seats import Seat
 from project.base.card import Card, CardSuit, CardValue
 
-SUIT_LIST = ["spade", "heart", "diamond", "club"]
-CARD_VALUE_LIST = [CardValue(f"{i+2}", i + 1) for i in range(8)] + [
-    CardValue(f"{i}", j) for i, j in {"T": 9, "J": 10, "Q": 11, "K": 12, "A": 13}.items()
-]
-
 
 # TODO: move somewhere else
 def color_printer(txt, color="blue", end=""):
@@ -30,9 +25,6 @@ def color_printer(txt, color="blue", end=""):
 
 
 class Deck:
-    suits = [CardSuit(i) for i in SUIT_LIST]
-    values = CARD_VALUE_LIST
-
     def __init__(self, N=None, S=None, E=None, W=None):
         self.N = N
         self.S = S
@@ -40,8 +32,8 @@ class Deck:
         self.W = W
 
     @staticmethod
-    def group_cards(cards):
-        hand = {i: [] for i in Deck.suits}
+    def group_cards_by_suit(cards):
+        hand = {i: [] for i in CardSuit.suits()}
 
         for card in cards:
             hand[card.suit].append(card)
@@ -50,18 +42,11 @@ class Deck:
 
     @staticmethod
     def get_hand_max_suit(hand):
-        max_len = -1
-
-        for suit in Deck.suits:
-            len_i = len(hand[suit])
-            if len_i > max_len:
-                max_len = len_i
-
-        return max_len
+        return max([len(cards) for suit, cards in hand.items() if isinstance(suit, CardSuit)])
 
     @staticmethod
     def show_hand(hand, pre_space=0, show_played=False):
-        for suit in Deck.suits:
+        for suit in CardSuit.suits():
             if pre_space != 0:
                 print(pre_space * " ", end="")
             print(suit.short_name, end=": ")
@@ -95,7 +80,7 @@ class Deck:
 
     @staticmethod
     def show_horizontal_hands(hand1, hand2, hand1_max_len, space, show_played):
-        for suit in Deck.suits:
+        for suit in CardSuit.suits():
             print(suit.short_name, end=": ")
             for card in hand1[suit]:
                 if show_played:
@@ -163,41 +148,39 @@ class Deck:
 
     @staticmethod
     def load(file_name, line_idx):
-        line_count = 0
         with open(file_name) as file:
-            for line in file:
-                if line_count == line_idx:
-                    deck = {}
-                    for hand in line.replace("\n", "").split(";"):
-                        seat_name, cards = hand.split(":")
-                        deck[seat_name] = {k: [] for k in Deck.suits}
+            try:
+                line = file.readlines()[line_idx]
+            except IndexError:
+                print(f"Board {line_idx} cannot be fount in file {file_name}")
 
-                        for card in map("".join, zip(*[iter(cards)] * 2)):
-                            suit_name, value_name = card[0], card[1]
-                            card_suit = CardSuit.create_by_short_name(suit_name)
-                            card_value = CardValue.create_by_display_name(value_name)
-                            card = Card(suit=card_suit, value=card_value)
+            deck = {}
+            for hand in line.replace("\n", "").split(";"):
+                seat_name, cards = hand.split(":")
+                deck[seat_name] = {k: [] for k in CardSuit.suits()}
 
-                            deck[seat_name][card_suit].append(card)
+                for card in map("".join, zip(*[iter(cards)] * 2)):
+                    suit_name, value_name = card[0], card[1]
+                    card_suit = CardSuit.create_by_short_name(suit_name)
+                    card_value = CardValue.create_by_display_name(value_name)
+                    card = Card(suit=card_suit, value=card_value)
 
-                    return Deck(**deck)
-                else:
-                    line_count += 1
+                    deck[seat_name][card_suit].append(card)
 
-        raise IndexError(f"Board {line_idx} cannot be fount in file {file_name}")
+            return Deck(**deck)
 
     @classmethod
     def shuffle(cls):
         import itertools
         import random
 
-        res = [Card(suit=i[0], value=i[1]) for i in list(itertools.product(Deck.suits, Deck.values))]
+        res = [Card(suit=i[0], value=i[1]) for i in list(itertools.product(CardSuit.suits(), CardValue.values()))]
         random.shuffle(res)
 
-        n_dec = Deck.group_cards(res[0:13])
-        s_dec = Deck.group_cards(res[13:26])
-        e_dec = Deck.group_cards(res[26:39])
-        w_dec = Deck.group_cards(res[39:52])
+        n_dec = Deck.group_cards_by_suit(res[0:13])
+        s_dec = Deck.group_cards_by_suit(res[13:26])
+        e_dec = Deck.group_cards_by_suit(res[26:39])
+        w_dec = Deck.group_cards_by_suit(res[39:52])
 
         deck = cls(N=n_dec, S=s_dec, E=e_dec, W=w_dec)
 

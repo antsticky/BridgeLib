@@ -1,5 +1,6 @@
-from project.base.people import Team, Player
 from project.base.board import Board
+from project.base.people import Team, Player
+
 
 # TODO: eliminated mutable default variables eg. mylist = []
 # TODO: activate claim functionality

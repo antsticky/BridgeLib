@@ -1,10 +1,10 @@
 from enum import Enum
 
-from project.base.card import Card, CardSuit
-from project.base.deck import Deck, SUIT_LIST, CARD_VALUE_LIST
-from project.base.bid import BidsClass, Bid, BidSuit
-from project.base.people import TablePlayers
+from project.base.deck import Deck
 from project.base.seats import Seat
+from project.base.people import TablePlayers
+from project.base.bid import BidsClass, Bid, BidSuit
+from project.base.card import Card, CardSuit, CardValue
 
 
 class PhaseClass(Enum):
@@ -142,8 +142,8 @@ class Board:
             print("It is not your turn")
         elif self.phase == PhaseClass.PLAY:
             player = Seat[seat]
-            suit = CardSuit(list(filter(lambda x: x[0].upper() == card[0].upper(), SUIT_LIST))[0])
-            value = list(filter(lambda x: x.display_name.upper() == card[1:].upper(), CARD_VALUE_LIST))[0]
+            suit = CardSuit.create_by_short_name(card[0].upper())
+            value = CardValue.create_by_display_name(card[1:].upper())
             played_card = Card(suit, value)
 
             player_hand = getattr(self.deck, player.name)

@@ -2,6 +2,10 @@ class CardSuit:
     def __init__(self, name):
         self.name = name
 
+    @staticmethod
+    def suits():
+        return [CardSuit.create_by_short_name(short_name) for short_name in ["C", "D", "H", "S"]]
+
     @classmethod
     def create_by_short_name(cls, short_name):
         if short_name.upper() == "S":
@@ -46,6 +50,15 @@ class CardSuit:
 
         return self.value > other.value
 
+    def __str__(self):
+        return self.short_name
+
+    def __format__(self, format_spec=None):
+        if format_spec in [None, "", "s"]:
+            return self.__str__()
+        else:
+            return self.name
+
     @property
     def short_name(self):
         return self.name[0].upper()
@@ -55,6 +68,18 @@ class CardValue:
     def __init__(self, name, rank):
         self.display_name = name
         self.rank = rank
+
+    @staticmethod
+    def values():
+        return [CardValue.create_by_display_name(display_name) for display_name in CardValue.display_names()]
+
+    @staticmethod
+    def display_names():
+        return [str(i + 2) for i in range(8)] + ["T", "J", "Q", "K", "A"]
+
+    @classmethod
+    def create_by_name(cls, display_name):
+        return cls(display_name, CardValue.display_names().index(display_name))
 
     @classmethod
     def create_by_display_name(cls, display_name):
