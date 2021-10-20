@@ -172,7 +172,6 @@ class Bid:
 
 class Contract:
     def __init__(self, decl, bid, is_dbl, is_rdbl, vul="NONVUL"):
-        # TODO: is_vul set in the bidding phase from the board setup
         self.decl = decl
         self.bid = bid
         self.is_dbl = is_dbl
@@ -183,7 +182,7 @@ class Contract:
 
         self.vul = vul
         self._decl_tricks = None
-        # add overtricks, trick_level, bidkey, etc here
+        # TODO: add overtricks, trick_level, bidkey, etc here
 
     def get_decl_tricks(self):
         if self._decl_tricks is None:
@@ -302,7 +301,6 @@ class Contract:
         return value
 
     def value(self, tricks=None):
-        # TODO: hardcoded 6
         if tricks is not None:
             pass
         elif self.decl_tricks is not None:

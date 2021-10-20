@@ -57,7 +57,6 @@ class Board:
 
     @property
     def is_vul(self):
-        # TODO: integrate to contract calculator
         base_bd_nb = self.board_nb
 
         while base_bd_nb > 16:
