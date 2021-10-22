@@ -10,6 +10,9 @@ class BidSuitNames(Enum):
     S = "spade"
     NT = "no-trump"
 
+    def index(suit_key):
+        return [e.name for e in BidSuitNames].index(suit_key)
+
 
 class BidActions(Enum):
     P = "p"
@@ -33,6 +36,18 @@ class BidSuit:
         else:
             return False
 
+    def __lt__(self, other):
+        if not isinstance(other, BidSuit):
+            raise NotImplementedError("other is not a BidSuit")
+
+        return BidSuitNames.index(self.short) < BidSuitNames.index(other.short)
+
+    def __gt__(self, other):
+        if not isinstance(other, BidSuit):
+            raise NotImplementedError("other is not a BidSuit")
+
+        return BidSuitNames.index(self.short) > BidSuitNames.index(other.short)
+
 
 class Bid:
     def __init__(self, bid_str):
@@ -43,6 +58,27 @@ class Bid:
         else:
             self.level = int("".join([i for i in bid_str if i.isnumeric()]))
             self.suit = BidSuit.from_str("".join([i for i in bid_str if not i.isnumeric()]))
+
+    def __eq__(self, other):
+        if not isinstance(other, Bid):
+            raise NotImplementedError("other is not a Bid")
+
+        return all([self.level == other.level, self.suit == other.suit])
+
+    def __gt__(self, other):
+        if other is None:
+            return True
+
+        if not isinstance(other, Bid):
+            raise NotImplementedError("other is not a Bid")
+
+        if all([other.suit, other.level]):
+            return True
+
+        if self.level == other.level:
+            return self.suit > other.suit
+
+        return self.level > other.level
 
 
 class BidsClass:
@@ -55,7 +91,9 @@ class BidsClass:
         self.nb_pass = 0
         self.is_dbl = False
         self.is_rdbl = False
+
         self.last_bid_action = None
+        self.last_valid_bid = None
 
     @property
     def contract(self):
@@ -99,6 +137,7 @@ class BidsClass:
         if bid.level is not None:
             self.is_dbl = False
             self.is_rdbl = False
+            self.last_valid_bid = bid
 
         self.bids.append((bid, seat))
         self.last_bid_action = (bid, seat)
@@ -127,7 +166,8 @@ class BidsClass:
         elif bid.name == BidActions.RDBL.value:
             raise ValueError("Cannot re-double this contract")
 
-        # TODO: is bid_old<bid_new
+        if not (bid > self.last_valid_bid):
+            raise ValueError("The new bid do not meet with the bid_old<bid_new condition")
 
     def close_bidding(self):
         cont_bid, cont_seat = self.bids[-4]
