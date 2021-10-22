@@ -4,11 +4,17 @@ from project.base.contract import Contract
 
 
 class BidSuitNames(Enum):
-    S = "spade"
-    H = "heart"
-    D = "diamond"
     C = "club"
+    D = "diamond"
+    H = "heart"
+    S = "spade"
     NT = "no-trump"
+
+
+class BidActions(Enum):
+    P = "p"
+    DBL = "x"
+    RDBL = "xx"
 
 
 class BidSuit:
@@ -28,6 +34,17 @@ class BidSuit:
             return False
 
 
+class Bid:
+    def __init__(self, bid_str):
+        self.name = bid_str
+        if bid_str in ["x", "p", "xx"]:
+            self.level = None
+            self.suit = None
+        else:
+            self.level = int("".join([i for i in bid_str if i.isnumeric()]))
+            self.suit = BidSuit.from_str("".join([i for i in bid_str if not i.isnumeric()]))
+
+
 class BidsClass:
     def __init__(self, dealer, callbacks):
         self.dealer = dealer
@@ -38,6 +55,7 @@ class BidsClass:
         self.nb_pass = 0
         self.is_dbl = False
         self.is_rdbl = False
+        self.last_bid_action = None
 
     @property
     def contract(self):
@@ -75,49 +93,54 @@ class BidsClass:
             print(displ, end=end_chr)
 
     def bidding(self, bid, seat):
-        if self.nb_pass == 3:
-            raise ValueError("Bidding ended")
+        self.detect_bid_end(bid)
+        self.check_bid_validity(bid, seat)
 
-        ###############################
-        if bid.name == "p":
-            self.nb_pass += 1
-        else:
-            self.nb_pass = 0
-        ###############################
-        if (bid.name == "x") and (self.nb_pass in [0, 2]):
-            self.is_dbl = True
-        elif bid.name == "x":
-            raise ValueError("Cannot double this contract")
-        ###############################
-        if all([bid.name == "xx", self.is_dbl, self.nb_pass in [0, 2]]):
-            self.is_rdbl = True
-        elif bid.name == "xx":
-            raise ValueError("Cannot double this contract")
-        ###############################
         if bid.level is not None:
             self.is_dbl = False
             self.is_rdbl = False
-        ###############################
 
-        # TODO: check bid logics, is bid_old<bid_new and seat_old-seat_new = 1
         self.bids.append((bid, seat))
+        self.last_bid_action = (bid, seat)
 
         if self.nb_pass == 3:
-            cont_bid, cont_seat = self.bids[-4]
-            declarer = self.get_declarer(cont_seat, cont_bid)
-            is_vul = self.callbacks.get("is_vul", {})[declarer.name]
-            self.contract = Contract(decl=declarer, bid=cont_bid, is_dbl=self.is_dbl, is_rdbl=self.is_rdbl, vul=is_vul)
-            self.callbacks.get("increase_active_player")(declarer)
+            self.close_bidding()
         else:
             self.callbacks.get("increase_active_player")(seat)
 
-
-class Bid:
-    def __init__(self, bid_str):
-        self.name = bid_str
-        if bid_str in ["x", "p", "xx"]:
-            self.level = None
-            self.suit = None
+    def check_bid_validity(self, bid, seat):
+        # Check whos turn is it
+        if self.last_bid_action is None:
+            assert seat == self.dealer, "It is not your turn"
         else:
-            self.level = int("".join([i for i in bid_str if i.isnumeric()]))
-            self.suit = BidSuit.from_str("".join([i for i in bid_str if not i.isnumeric()]))
+            assert seat == next(self.last_bid_action[1]), "It is not your turn"
+
+        # Check if double is available
+        if (bid.name == BidActions.DBL.value) and (self.nb_pass in [0, 2]):
+            self.is_dbl = True
+        elif bid.name == BidActions.DBL.value:
+            raise ValueError("Cannot double this contract")
+
+        # Check if re-double is available
+        if all([bid.name == BidActions.RDBL.value, self.is_dbl, self.nb_pass in [0, 2]]):
+            self.is_rdbl = True
+        elif bid.name == BidActions.RDBL.value:
+            raise ValueError("Cannot re-double this contract")
+
+        # TODO: is bid_old<bid_new
+
+    def close_bidding(self):
+        cont_bid, cont_seat = self.bids[-4]
+        declarer = self.get_declarer(cont_seat, cont_bid)
+        is_vul = self.callbacks.get("is_vul", {})[declarer.name]
+        self.contract = Contract(decl=declarer, bid=cont_bid, is_dbl=self.is_dbl, is_rdbl=self.is_rdbl, vul=is_vul)
+        self.callbacks.get("increase_active_player")(declarer)
+
+    def detect_bid_end(self, bid):
+        if self.nb_pass == 3:
+            raise ValueError("Bidding ended")
+
+        if bid.name == BidActions.P.value:
+            self.nb_pass += 1
+        else:
+            self.nb_pass = 0
