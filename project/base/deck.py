@@ -1,27 +1,6 @@
 from project.base.seats import Seat
 from project.base.card import Card, CardSuit, CardValue
-
-
-# TODO: move somewhere else
-def color_printer(txt, color="blue", end=""):
-    if color == "blue":
-        STARTC = "\033[94m"
-    elif color == "magenta":
-        STARTC = "\033[95m"
-    elif color == "cyan":
-        STARTC = "\033[96m"
-    elif color == "green":
-        STARTC = "\033[92m"
-    elif color == "yellow":
-        STARTC = "\033[93m"
-    elif color == "red":
-        STARTC = "\033[91m"
-    else:
-        STARTC = "\033[94m"
-
-    ENDC = "\033[0m"
-
-    print(STARTC + txt + ENDC, end=end)
+from project.base.logger import color_printer
 
 
 class Deck:
