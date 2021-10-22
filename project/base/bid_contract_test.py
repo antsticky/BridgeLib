@@ -1,6 +1,7 @@
 import pytest
 
-from project.base.bid import Contract, Bid
+from project.base.bid import Bid
+from project.base.contract import Contract
 
 
 @pytest.mark.parametrize(

@@ -1,4 +1,5 @@
-from project.base.bid import Contract, Bid
+from project.base.bid import Bid
+from project.base.contract import Contract
 
 
 if __name__ == "__main__":
