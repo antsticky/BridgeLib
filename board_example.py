@@ -18,7 +18,7 @@ def define_players():
     Andi = Player("Andi", "Sinkovicz Andrea", team=RR)
     Peter = Player("Peter", "Sinkovicz Péter", team=RR)
 
-    return Zsuzsa, Gyorgy, Andi, Peter
+    return Andi, Peter, Zsuzsa, Gyorgy
 
 
 def do_bid(board, is_show=True):
@@ -106,10 +106,10 @@ def do_play(board, is_show=True, show_played=True):
 
 
 if __name__ == "__main__":
-    Zsuzsa, Gyorgy, Andi, Peter = define_players()
+    N_player, S_player, E_player, W_player = define_players()
 
-    board1 = Board(board_nb=1, dealer="W")
-    board1.seating(N=Andi, S=Peter, E=Zsuzsa, W=Gyorgy)
+    board1 = Board(board_nb=1)
+    board1.seating(N=N_player, S=S_player, E=E_player, W=W_player)
 
     # ------ Deal ------
     # board1.deal()
