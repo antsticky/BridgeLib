@@ -7,8 +7,9 @@
             "request": "launch",
             //"module": "def_lead_example",
             //"module": "frekik_example",
-            "module": "board_example",
+            //"module": "board_example",
             //"module": "contract_value_example"
+            "module": "dds_example"
         }
     ]
 }

@@ -1,0 +1,15 @@
+!.gitignore
+*.o
+*.a
+*.dll
+*.obj
+*.def
+src/[Mm]akefile
+test/[Mm]akefile
+examples/[Mm]akefile
+test/dtest
+test/itest
+
+*.exe
+*.swp
+*.bak
