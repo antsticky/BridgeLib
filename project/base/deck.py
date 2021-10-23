@@ -92,7 +92,8 @@ class Deck:
     def show(self, show_played=True):
         max_NS = max(Deck.get_hand_max_suit(self.N), Deck.get_hand_max_suit(self.S)) + 2
         max_W = Deck.get_hand_max_suit(self.W) + 3
-
+        
+        #TODO: move spade to the top
         Deck.show_hand(self.N, pre_space=max_W + 1, show_played=show_played)
         Deck.show_hands(self.W, self.E, hand1_max_len=max_W, space=max_NS, orientation="horizontal", show_played=show_played)
         Deck.show_hand(self.S, pre_space=max_W + 1, show_played=show_played)

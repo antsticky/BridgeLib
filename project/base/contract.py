@@ -64,6 +64,10 @@ class Contract:
         self.vul = vul
         self._decl_tricks = None
 
+    @property
+    def trump(self):
+        return self.bid.suit
+
     def get_decl_tricks(self):
         if self._decl_tricks is None:
             raise ValueError("No tricks ara available")

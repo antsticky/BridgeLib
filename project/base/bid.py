@@ -30,6 +30,10 @@ class BidSuit:
         suit_cls = cls(BidSuitNames[suit_str.upper()])
         return suit_cls
 
+    @property
+    def index(self):
+        return BidSuitNames.index(self.short)
+
     def __eq__(self, other):
         if all([self.name == other.name, self.short == other.short]):
             return True
@@ -40,6 +44,7 @@ class BidSuit:
         if not isinstance(other, BidSuit):
             raise NotImplementedError("other is not a BidSuit")
 
+        # TODO: use property instead
         return BidSuitNames.index(self.short) < BidSuitNames.index(other.short)
 
     def __gt__(self, other):

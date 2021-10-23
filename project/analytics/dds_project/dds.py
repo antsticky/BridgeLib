@@ -17,7 +17,7 @@ limitations under the License."""
 from ctypes import *
 
 dds = cdll.LoadLibrary("libdds.so")
-print('Loaded lib {0}'.format(dds))
+#print('Loaded lib {0}'.format(dds))
 
 DDS_VERSION = 20700    
 

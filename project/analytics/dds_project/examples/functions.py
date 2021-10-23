@@ -1,5 +1,5 @@
-import project.analytics.dds.examples.hands as hands
-import project.analytics.dds.examples.dds as dds
+import project.analytics.dds_project.examples.hands as hands
+import project.analytics.dds_project.examples.dds as dds
 import ctypes
 
 
@@ -231,7 +231,7 @@ def PrintHand(title, remainCards):
             c = c + 1
 
     # Print it
-    print("{}".format(title))
+    #print("{}".format(title))
     dashes = bytearray('', "utf-8")
     dashes = dashes.ljust(80)
     l = len(title)
