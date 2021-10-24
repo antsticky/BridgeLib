@@ -36,7 +36,7 @@ class DDLeadSolver(BaseSolver):
     @staticmethod
     def get_hand_suit_value(hand, suit_short_name):
         cards = [v for k, v in hand.items() if k.short_name == suit_short_name][0]
-        pointers = [DDLeadSolver.get_card_pointer(card.value.rank) for card in cards if card.played == False]
+        pointers = [DDLeadSolver.get_card_pointer(card.value.rank) for card in cards if not card.played]
         if len(pointers) == 0:
             return None
         else:
