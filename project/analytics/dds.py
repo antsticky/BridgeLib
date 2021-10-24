@@ -229,17 +229,46 @@ class DDParSolver(BaseSolver):
         print("")
 
     @staticmethod
-    def get_optimal_par_scores(par, is_print=True):
-        # TODO: res = {"score": [], "contract": []}
-
+    def get_optimal_par_scores(par, is_print=False):
+        res = {}
         if is_print:
             print("NS score: {}".format(par.contents.parScore[0].value.decode("utf-8")))
             print("EW score: {}".format(par.contents.parScore[1].value.decode("utf-8")))
             print("NS list : {}".format(par.contents.parContractsString[0].value.decode("utf-8")))
             print("EW list : {}\n".format(par.contents.parContractsString[1].value.decode("utf-8")))
 
+        optimal_score_NS = par.contents.parScore[0].value.decode("utf-8").split(" ")[1]
+        
+        optimal_contract_str = par.contents.parContractsString[1].value.decode("utf-8").split(":")[1]
+        optimal_dealers = optimal_contract_str.split(" ")[0]
+        optimal_dealer = None
+        if "N" in optimal_dealers:
+            optimal_dealer = "N"
+        elif "S" in optimal_dealers:
+            optimal_dealer = "S"
+        elif "E" in optimal_dealers:
+            optimal_dealer = "E"
+        elif "W" in optimal_dealers:
+            optimal_dealer = "W"
+        else:
+            raise ValueError("Optimal dealer cannot be found")
+
+        optimal_contracts = optimal_contract_str.split(" ")[1]
+        import re
+        match = re.match(r"([0-9]+)([a-z]+)", optimal_contracts, re.I)
+        items = match.groups()
+
+        optimal_level = items[0][0]
+        optimal_trump = "NT" if "NT" in items[1][0] else items[1][0]
+        is_doubled = "x" if "x" in items[1][0] else ""
+        
+        res["contract"] = optimal_level + optimal_trump + is_doubled
+        res["declarer"] = optimal_dealer
+        res["NS_score"] = optimal_score_NS
+        return res
+
     @staticmethod
-    def get_par_score(deck, vul):
+    def get_par_score(deck, vul, is_print = False):
 
         score_table = DDLeadSolver.get_max_tricks_table(deck)
 
@@ -260,8 +289,10 @@ class DDParSolver(BaseSolver):
             dds.ErrorMessage(res, line)
             print("DDS error: {}".format(line.value.decode("utf-8")))
 
-        DDParSolver.show_par_table(ctypes.pointer(DDtable))
-        DDParSolver.get_optimal_par_scores(ctypes.pointer(pres))
+        if is_print:
+            DDParSolver.show_par_table(ctypes.pointer(DDtable))
+        
+        return DDParSolver.get_optimal_par_scores(ctypes.pointer(pres), is_print=is_print)
 
 
 class DDSolver(DDLeadSolver, DDParSolver):

@@ -2,6 +2,7 @@ from project.base.board import Board
 from project.analytics.dds import DDSolver
 from project.base.people import Team, Player
 
+from project.base.board import Deck
 
 def define_players():
     RR = Team("RR", 666)
@@ -106,12 +107,20 @@ if __name__ == "__main__":
     board1.seating(N=N_player, S=S_player, E=E_player, W=W_player)
     board1.load_deck(file_name="misc/boards.txt", line_idx=1)
 
-    do_bid(board=board1)
-    board1.deck.show()
+    do_bid(board=board1, is_show=False)
 
     lead_scores, _ = DDSolver.score_leads(deck=board1.deck, trump=board1.contract.trump, first=board1.active_player)
     best_score = DDSolver.best_score(deck=board1.deck, trump=board1.contract.trump, first=board1.active_player)
-    print(lead_scores)
-    print(best_score)
+    #print(lead_scores)
+    #print(best_score)
 
-    DDSolver.get_par_score(deck=board1.deck, vul=board1.is_vul)
+    optimal = DDSolver.get_par_score(deck=board1.deck, vul=board1.is_vul)
+    print(f'\n{optimal.get("declarer")}: {optimal.get("contract")}\n')
+    Deck.show_hand(board1.deck.W)
+
+    test_lead = input("\nWhat is your opening lead? ")
+    print("\n\n")
+
+    board1.deck.show()
+    print(f'optimal score (NS): {optimal["NS_score"]}')
+    print(lead_scores)
