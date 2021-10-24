@@ -25,7 +25,7 @@ class Deck:
 
     @staticmethod
     def show_hand(hand, pre_space=0, show_played=False):
-        for suit in CardSuit.suits():
+        for suit in CardSuit.suits_reverse():
             if pre_space != 0:
                 print(pre_space * " ", end="")
             print(suit.short_name, end=": ")
@@ -59,7 +59,7 @@ class Deck:
 
     @staticmethod
     def show_horizontal_hands(hand1, hand2, hand1_max_len, space, show_played):
-        for suit in CardSuit.suits():
+        for suit in CardSuit.suits_reverse():
             print(suit.short_name, end=": ")
             for card in hand1[suit]:
                 if show_played:
@@ -92,8 +92,7 @@ class Deck:
     def show(self, show_played=True):
         max_NS = max(Deck.get_hand_max_suit(self.N), Deck.get_hand_max_suit(self.S)) + 2
         max_W = Deck.get_hand_max_suit(self.W) + 3
-        
-        #TODO: move spade to the top
+
         Deck.show_hand(self.N, pre_space=max_W + 1, show_played=show_played)
         Deck.show_hands(self.W, self.E, hand1_max_len=max_W, space=max_NS, orientation="horizontal", show_played=show_played)
         Deck.show_hand(self.S, pre_space=max_W + 1, show_played=show_played)

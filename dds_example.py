@@ -104,12 +104,14 @@ if __name__ == "__main__":
 
     board1 = Board(board_nb=4)
     board1.seating(N=N_player, S=S_player, E=E_player, W=W_player)
-    board1.load_deck(file_name="misc/boards.txt", line_idx=2)
+    board1.load_deck(file_name="misc/boards.txt", line_idx=1)
 
     do_bid(board=board1)
     board1.deck.show()
 
-    ddsolver = DDSolver()
-    lead_scores, _ = ddsolver.score_leads(deck=board1.deck, trump=board1.contract.trump, first=board1.active_player)
-
+    lead_scores, _ = DDSolver.score_leads(deck=board1.deck, trump=board1.contract.trump, first=board1.active_player)
+    best_score = DDSolver.best_score(deck=board1.deck, trump=board1.contract.trump, first=board1.active_player)
     print(lead_scores)
+    print(best_score)
+
+    DDSolver.get_par_score(deck=board1.deck, vul=board1.is_vul)

@@ -6,6 +6,10 @@ class CardSuit:
     def suits():
         return [CardSuit.create_by_short_name(short_name) for short_name in ["C", "D", "H", "S"]]
 
+    @staticmethod
+    def suits_reverse():
+        return [CardSuit.create_by_short_name(short_name) for short_name in ["S", "H", "D", "C"]]
+
     @classmethod
     def create_by_short_name(cls, short_name):
         if short_name.upper() == "S":
