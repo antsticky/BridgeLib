@@ -146,8 +146,30 @@ class DDLeadSolver(BaseSolver):
             print("DDS error: {}".format(line.value.decode("utf-8")))
 
     @staticmethod
+    def get_lead_score(lead_scores, test_lead, is_print=False):
+        your_score = None
+        for score, tuples in lead_scores.items():
+            if is_print:
+                print(f"\n{score}", end=": ")
+            for t in tuples:
+                if t[0] == test_lead[0] and t[1] == test_lead[1]:
+                    your_score = score
+                if is_print:
+                    print(f"{t[0]}{t[1]}", end=" ")
+
+        assert your_score is not None, "You might not having the given card"
+
+        return your_score
+
+    @staticmethod
     def score_leads(deck, trump, first):
-        trump_index = trump if isinstance(trump, int) else DDLeadSolver.get_trump_index(trump.short)
+        if isinstance(trump, int):
+            trump_index = trump
+        elif isinstance(trump, str):
+            trump_index = DDLeadSolver.get_trump_index(trump)
+        else:
+            trump_index = DDLeadSolver.get_trump_index(trump.short)
+
         first_player_index = first if isinstance(first, int) else DDLeadSolver.get_player_index(first.name)
         holdings = DDLeadSolver.prepare_holdings(deck)
 
@@ -156,18 +178,19 @@ class DDLeadSolver(BaseSolver):
         score_table = DDLeadSolver.prepare_results(ctypes.pointer(fut3), is_print=False)
 
         nb_solutions = sum([len(x) for x in list(score_table.values())])
-        return score_table, nb_solutions
+        max_score = max(list(score_table.keys()))
+        return score_table, max_score, nb_solutions
 
     @staticmethod
     def best_score(deck, trump, first):
-        full_res, __ = DDLeadSolver.score_leads(deck, trump, first)
+        full_res, *_ = DDLeadSolver.score_leads(deck, trump, first)
 
         return max([k for k in full_res.keys()])
 
     @staticmethod
     def get_player_best_score_list(deck, player):
         player_index = DDLeadSolver.get_player_index(player)
-        first = player_index - 1 if player_index > 0 else 3
+        first = player_index + 1 if player_index < 3 else 0
         res = []
         for suit in DDLeadSolver.trump_suits:
             res.append(13 - DDLeadSolver.best_score(deck, DDLeadSolver.get_trump_index(suit), first))
@@ -238,7 +261,7 @@ class DDParSolver(BaseSolver):
             print("EW list : {}\n".format(par.contents.parContractsString[1].value.decode("utf-8")))
 
         optimal_score_NS = par.contents.parScore[0].value.decode("utf-8").split(" ")[1]
-        
+
         optimal_contract_str = par.contents.parContractsString[1].value.decode("utf-8").split(":")[1]
         optimal_dealers = optimal_contract_str.split(" ")[0]
         optimal_dealer = None
@@ -255,20 +278,21 @@ class DDParSolver(BaseSolver):
 
         optimal_contracts = optimal_contract_str.split(" ")[1]
         import re
+
         match = re.match(r"([0-9]+)([a-z]+)", optimal_contracts, re.I)
         items = match.groups()
 
         optimal_level = items[0][0]
         optimal_trump = "NT" if "NT" in items[1][0] else items[1][0]
-        is_doubled = "x" if "x" in items[1][0] else ""
-        
+        is_doubled = "x" if "x" in items[1] else ""
+
         res["contract"] = optimal_level + optimal_trump + is_doubled
         res["declarer"] = optimal_dealer
         res["NS_score"] = optimal_score_NS
         return res
 
     @staticmethod
-    def get_par_score(deck, vul, is_print = False):
+    def get_par_score(deck, vul, is_print=False):
 
         score_table = DDLeadSolver.get_max_tricks_table(deck)
 
@@ -291,7 +315,7 @@ class DDParSolver(BaseSolver):
 
         if is_print:
             DDParSolver.show_par_table(ctypes.pointer(DDtable))
-        
+
         return DDParSolver.get_optimal_par_scores(ctypes.pointer(pres), is_print=is_print)
 
 

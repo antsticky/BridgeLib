@@ -4,6 +4,7 @@ from project.base.people import Team, Player
 
 from project.base.board import Deck
 
+
 def define_players():
     RR = Team("RR", 666)
 
@@ -103,24 +104,36 @@ def do_play(board, is_show=True, show_played=True):
 if __name__ == "__main__":
     N_player, S_player, E_player, W_player = define_players()
 
-    board1 = Board(board_nb=4)
-    board1.seating(N=N_player, S=S_player, E=E_player, W=W_player)
-    board1.load_deck(file_name="misc/boards.txt", line_idx=1)
+    cum_sum_point = 0
+    your_cum_sum_point = 0
+    for i in range(20):
+        board1 = Board(board_nb=i + 1)
+        board1.seating(N=N_player, S=S_player, E=E_player, W=W_player)
+        board1.load_deck(file_name="misc/boards.txt", line_idx=i)
 
-    do_bid(board=board1, is_show=False)
+        optimal = DDSolver.get_par_score(deck=board1.deck, vul=board1.is_vul, is_print=False)
+        print("=" * 40)
+        print(f'{optimal.get("declarer")}: {optimal.get("contract")}\n')
 
-    lead_scores, _ = DDSolver.score_leads(deck=board1.deck, trump=board1.contract.trump, first=board1.active_player)
-    best_score = DDSolver.best_score(deck=board1.deck, trump=board1.contract.trump, first=board1.active_player)
-    #print(lead_scores)
-    #print(best_score)
+        opener = Deck.show_opener_hand(board1, optimal["declarer"])
 
-    optimal = DDSolver.get_par_score(deck=board1.deck, vul=board1.is_vul)
-    print(f'\n{optimal.get("declarer")}: {optimal.get("contract")}\n')
-    Deck.show_hand(board1.deck.W)
+        test_lead = input("\nWhat is your opening lead? ")
+        print("\n")
 
-    test_lead = input("\nWhat is your opening lead? ")
-    print("\n\n")
+        assert len(test_lead) == 2, "Wrong format"
 
-    board1.deck.show()
-    print(f'optimal score (NS): {optimal["NS_score"]}')
-    print(lead_scores)
+        board1.deck.show()
+
+        lead_scores, best_score, _ = DDSolver.score_leads(deck=board1.deck, trump=optimal["contract"][1], first=opener)
+        lead_score = DDSolver.get_lead_score(lead_scores, test_lead, is_print=True)
+
+        your_cum_sum_point += lead_score
+        cum_sum_point += best_score
+        print(f"\n\nYour score is {lead_score} out of {best_score}")
+        print(f"Your overall score is {your_cum_sum_point}/{cum_sum_point} = {int(100*your_cum_sum_point/cum_sum_point)}%")
+        print("=" * 40)
+
+        is_next = input("\nOne more? [y/n] ")
+
+        if is_next != "y":
+            break

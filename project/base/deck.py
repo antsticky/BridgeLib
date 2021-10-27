@@ -42,6 +42,14 @@ class Deck:
             print()
 
     @staticmethod
+    def show_opener_hand(board, declarer_str):
+        decl = Seat[declarer_str]
+        opener_hand = getattr(board.deck, next(decl).name)
+        Deck.show_hand(opener_hand)
+
+        return next(decl)
+
+    @staticmethod
     def show_hands(hand1, hand2, hand1_max_len=0, orientation="vertical", space=0, show_played=False):
         if orientation == "horizontal":
             Deck.show_horizontal_hands(hand1, hand2, hand1_max_len, space, show_played)
