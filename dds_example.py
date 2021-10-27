@@ -124,7 +124,8 @@ if __name__ == "__main__":
 
         board1.deck.show()
 
-        lead_scores, best_score, _ = DDSolver.score_leads(deck=board1.deck, trump=optimal["contract"][1], first=opener)
+        trump_suit = "NT" if optimal["contract"][1] == "N" else optimal["contract"][1]
+        lead_scores, best_score, _ = DDSolver.score_leads(deck=board1.deck, trump=trump_suit, first=opener)
         lead_score = DDSolver.get_lead_score(lead_scores, test_lead, is_print=True)
 
         your_cum_sum_point += lead_score
