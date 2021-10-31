@@ -68,11 +68,12 @@ if __name__ == "__main__":
         error_msgs=['Please select either "r" or "s".'],
         conditions=[load_mode_check],
     )
-    #nb_boards = input("How many boards do you want to play? ")
+    
+    nb_boards = input("How many boards do you want to play? ")
 
     cum_sum_point = 0
     your_cum_sum_point = 0
-    for i in range(20):
+    for i in range(nb_boards):
         board = Board(board_nb=i + 1)
         board.seating(N=N_player, S=S_player, E=E_player, W=W_player)
         
