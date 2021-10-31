@@ -6,10 +6,10 @@
             "type": "python",
             "request": "launch",
             //"module": "examples.request_def_lead_analyzer",
-            "module": "examples.request_freki_analyzer",
-            //"module": "examples.full_board",
-            //"module": "examples.contract_value_table"
-            //"module": "examples.dds_opening"
+            //"module": "examples.request_freki_analyzer",
+            //"module": "examples.base_full_board",
+            //"module": "examples.base_contract_value_table"
+            "module": "examples.dds_opening"
         }
     ]
 }
