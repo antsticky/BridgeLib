@@ -69,7 +69,7 @@ if __name__ == "__main__":
         conditions=[load_mode_check],
     )
     
-    nb_boards = input("How many boards do you want to play? ")
+    nb_boards = int(input("How many boards do you want to play? "))
 
     cum_sum_point = 0
     your_cum_sum_point = 0
@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
         optimal = DDSolver.get_par_score(deck=board.deck, vul=board.is_vul, is_print=False)
 
-        print(f'{"=" * 40}\n{optimal.get("declarer")}: {optimal.get("contract")} NS/EW: {board.is_vul["N"]}/{board.is_vul["E"]}\n')
+        print(f'{"=" * 20} {i+1} {"=" * 20}\n{optimal.get("declarer")}: {optimal.get("contract")} NS/EW: {board.is_vul["N"]}/{board.is_vul["E"]}\n')
         opener = Deck.show_opener_hand(board, optimal["declarer"])
 
         test_lead = validate_input(
