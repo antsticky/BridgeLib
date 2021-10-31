@@ -16,125 +16,108 @@ def define_players():
 
     return Andi, Peter, Zsuzsa, Gyorgy
 
+def load_mode_check(load_mode, **kwargs):
+    return load_mode in ["r", "s"]
 
-def do_bid(board, is_show=True):
-    board.bid("1H", "W")
-    board.bid("x", "N")
-    board.bid("2H", "E")
-    board.bid("2NT", "S")
+def card_format_check(test_lead, **kwargs):
+    if test_lead is None:
+        return False
+    
+    if len(test_lead) != 2:
+        return False
 
-    board.bid("p", "W")
-    board.bid("p", "N")
-    board.bid("p", "E")
+    if test_lead[0] not in ["C", "D", "H", "S"]:
+        return False
 
-    if is_show:
-        board.bids.show()
+    if test_lead[1] not in ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]:
+        return False
 
+    return True
 
-def do_play(board, is_show=True, show_played=True):
-    board.play("H5", "W")
-    board.play("HT", "N")
-    board.play("HJ", "E")
-    board.play("HA", "S")
+def is_holding_check(test_lead, deck, opener, **kwargs):
+    hand = getattr(deck, opener.name)
 
-    board.play("S5", "S")
-    board.play("ST", "W")
-    board.play("S2", "N")
-    board.play("S3", "E")
+    is_in = False
+    for suit, cards in hand.items():
+        suit_name = suit.short_name
+        for card in cards:
+            card_name = card.value.display_name
+            if test_lead == suit_name + card_name:
+                is_in = True
 
-    board.play("H4", "W")
-    board.play("HK", "N")
-    board.play("H8", "E")
-    board.play("H2", "S")
+    return is_in
 
-    board.play("S7", "N")
-    board.play("S4", "E")
-    board.play("SK", "S")
-    board.play("SJ", "W")
+def validate_input(question, error_msgs, conditions, **kwargs):
+    variable = None
 
-    board.play("S9", "S")
-    board.play("SQ", "W")
-    board.play("SA", "N")
-    board.play("S6", "E")
+    while not all([condition(variable, **kwargs) for condition in conditions]):
+        variable = input(question)
 
-    board.play("S8", "N")
-    board.play("C5", "E")
-    board.play("D3", "S")
-    board.play("D2", "W")
-
-    board.play("DK", "N")
-    board.play("DA", "E")
-    board.play("D4", "S")
-    board.play("C9", "W")
-
-    board.play("H7", "E")
-    board.play("D5", "S")
-    board.play("HQ", "W")
-    board.play("D6", "N")
-
-    board.play("H9", "W")
-    board.play("C2", "N")
-    board.play("C7", "E")
-    board.play("C4", "S")
-
-    board.play("H6", "W")
-    board.play("C3", "N")
-    board.play("CJ", "E")
-    board.play("C6", "S")
-
-    board.play("H3", "W")
-    board.play("D9", "N")
-    board.play("D8", "E")
-    board.play("C8", "S")
-
-    board.play("CK", "W")
-    board.play("CT", "N")
-    board.play("DT", "E")
-    board.play("CA", "S")
-
-    board.play("D7", "S")
-    board.play("CQ", "W")
-    board.play("DQ", "N")
-    board.play("DJ", "E")
-
-    if is_show:
-        board.deck.show(show_played=show_played)
+        for condition, error_msg in zip(conditions, error_msgs):
+            if not condition(variable, **kwargs):
+                print(error_msg)
+    
+    return variable
 
 
 if __name__ == "__main__":
     N_player, S_player, E_player, W_player = define_players()
 
+    load_mode = validate_input(
+        question="\nDo you want to use random or saved boards? [r/s] ",
+        error_msgs=['Please select either "r" or "s".'],
+        conditions=[load_mode_check],
+    )
+    #nb_boards = input("How many boards do you want to play? ")
+
     cum_sum_point = 0
     your_cum_sum_point = 0
     for i in range(20):
-        board1 = Board(board_nb=i + 1)
-        board1.seating(N=N_player, S=S_player, E=E_player, W=W_player)
-        board1.load_deck(file_name="misc/boards.txt", line_idx=i)
+        board = Board(board_nb=i + 1)
+        board.seating(N=N_player, S=S_player, E=E_player, W=W_player)
+        
+        if load_mode == "s":
+            try:
+                board.load_deck(file_name="misc/boards.txt", line_idx=i)
+            except IndexError:
+                print("\nNo more board to load...")
+                break
+        else:
+            board.deal()
 
-        optimal = DDSolver.get_par_score(deck=board1.deck, vul=board1.is_vul, is_print=False)
-        print("=" * 40)
-        print(f'{optimal.get("declarer")}: {optimal.get("contract")}\n')
 
-        opener = Deck.show_opener_hand(board1, optimal["declarer"])
+        optimal = DDSolver.get_par_score(deck=board.deck, vul=board.is_vul, is_print=False)
 
-        test_lead = input("\nWhat is your opening lead? ")
-        print("\n")
+        print(f'{"=" * 40}\n{optimal.get("declarer")}: {optimal.get("contract")} NS/EW: {board.is_vul["N"]}/{board.is_vul["E"]}\n')
+        opener = Deck.show_opener_hand(board, optimal["declarer"])
 
-        assert len(test_lead) == 2, "Wrong format"
+        test_lead = validate_input(
+            question="\nWhat is your opening lead? ",
+            error_msgs=[
+                'Wrong format, please use short suit code and rank, e.g.: "H3"',
+                'Your are not holding this card',
+                ],
+            conditions=[
+                card_format_check,
+                is_holding_check,
+                ],
+            opener=opener,
+            deck=board.deck,
+        )
 
-        board1.deck.show()
+        board.deck.show()
 
         trump_suit = "NT" if optimal["contract"][1] == "N" else optimal["contract"][1]
-        lead_scores, best_score, _ = DDSolver.score_leads(deck=board1.deck, trump=trump_suit, first=opener)
+        lead_scores, best_score, worst_score, _ = DDSolver.score_leads(deck=board.deck, trump=trump_suit, first=opener)
         lead_score = DDSolver.get_lead_score(lead_scores, test_lead, is_print=True)
 
-        your_cum_sum_point += lead_score
-        cum_sum_point += best_score
-        print(f"\n\nYour score is {lead_score} out of {best_score}")
-        print(f"Your overall score is {your_cum_sum_point}/{cum_sum_point} = {int(100*your_cum_sum_point/cum_sum_point)}%")
-        print("=" * 40)
+        max_score = best_score - worst_score + 1
+        your_score = lead_score - worst_score + 1
+        your_cum_sum_point += your_score
+        cum_sum_point += max_score
+        print(f"\n\nYour score is {your_score} out of {max_score}")
+        print(f'Your overall score is {your_cum_sum_point}/{cum_sum_point} = {int(100*your_cum_sum_point/cum_sum_point)}%\n{"=" * 40}')
 
         is_next = input("\nOne more? [y/n] ")
-
         if is_next != "y":
             break

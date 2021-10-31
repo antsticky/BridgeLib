@@ -157,7 +157,8 @@ class DDLeadSolver(BaseSolver):
                 if is_print:
                     print(f"{t[0]}{t[1]}", end=" ")
 
-        assert your_score is not None, "You might not having the given card"
+        if your_score is None:
+            raise  ValueError("You might not having the given card")
 
         return your_score
 
@@ -179,7 +180,8 @@ class DDLeadSolver(BaseSolver):
 
         nb_solutions = sum([len(x) for x in list(score_table.values())])
         max_score = max(list(score_table.keys()))
-        return score_table, max_score, nb_solutions
+        min_score = min(list(score_table.keys()))
+        return score_table, max_score, min_score, nb_solutions
 
     @staticmethod
     def best_score(deck, trump, first):

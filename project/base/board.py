@@ -110,6 +110,7 @@ class Board:
     def deal(self):
         if self.phase == PhaseClass.NEW:
             self.deck = Deck.shuffle()
+            self.deck.sort()
             self.set_phase_by_key("BID")
         else:
             print("Deal was alredy made, please use redeal")
