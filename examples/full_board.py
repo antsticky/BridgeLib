@@ -1,24 +1,11 @@
 from project.base.board import Board
-from project.base.people import Team, Player
-
+from project.utils.dummy_players import define_players
 
 # TODO: eliminated mutable default variables eg. mylist = []
 # TODO: activate claim functionality
 # TODO: improve analytics
 # TODO: implement open lead checker
 # TODO: develop tournament functionality
-
-
-def define_players():
-    RR = Team("RR", 666)
-
-    Zsuzsa = Player("Zsuzsa", "Réti Zsuzsa", team=RR)
-    Gyorgy = Player("Gyorgy", "Ferenci Gyorgy", team=RR)
-
-    Andi = Player("Andi", "Sinkovicz Andrea", team=RR)
-    Peter = Player("Peter", "Sinkovicz Péter", team=RR)
-
-    return Andi, Peter, Zsuzsa, Gyorgy
 
 
 def do_bid(board, is_show=True):
@@ -114,7 +101,7 @@ if __name__ == "__main__":
     # ------ Deal ------
     # board1.deal()
     # board1.deck.sort()
-    board1.load_deck(file_name="misc/boards.txt", line_idx=2)
+    board1.load_deck(file_name="misc/boards.txt", line_idx=4)
     # board1.deck.save(file_name="misc/boards.txt",write_type="a")
 
     # ------ Bid  ------

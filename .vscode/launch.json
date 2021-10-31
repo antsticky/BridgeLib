@@ -2,14 +2,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: risk measure",
+            "name": "Bridge lib",
             "type": "python",
             "request": "launch",
-            //"module": "def_lead_example",
-            //"module": "frekik_example",
-            //"module": "board_example",
-            //"module": "contract_value_example"
-            "module": "dds_example"
+            //"module": "examples.request_def_lead_analyzer",
+            "module": "examples.request_freki_analyzer",
+            //"module": "examples.full_board",
+            //"module": "examples.contract_value_table"
+            //"module": "examples.dds_opening"
         }
     ]
 }

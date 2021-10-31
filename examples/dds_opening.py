@@ -1,64 +1,9 @@
 from project.base.board import Board
 from project.analytics.dds import DDSolver
-from project.base.people import Team, Player
 
 from project.base.board import Deck
-
-
-def define_players():
-    RR = Team("RR", 666)
-
-    Zsuzsa = Player("Zsuzsa", "Réti Zsuzsa", team=RR)
-    Gyorgy = Player("Gyorgy", "Ferenci Gyorgy", team=RR)
-
-    Andi = Player("Andi", "Sinkovicz Andrea", team=RR)
-    Peter = Player("Peter", "Sinkovicz Péter", team=RR)
-
-    return Andi, Peter, Zsuzsa, Gyorgy
-
-def load_mode_check(load_mode, **kwargs):
-    return load_mode in ["r", "s"]
-
-def card_format_check(test_lead, **kwargs):
-    if test_lead is None:
-        return False
-    
-    if len(test_lead) != 2:
-        return False
-
-    if test_lead[0] not in ["C", "D", "H", "S"]:
-        return False
-
-    if test_lead[1] not in ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]:
-        return False
-
-    return True
-
-def is_holding_check(test_lead, deck, opener, **kwargs):
-    hand = getattr(deck, opener.name)
-
-    is_in = False
-    for suit, cards in hand.items():
-        suit_name = suit.short_name
-        for card in cards:
-            card_name = card.value.display_name
-            if test_lead == suit_name + card_name:
-                is_in = True
-
-    return is_in
-
-def validate_input(question, error_msgs, conditions, **kwargs):
-    variable = None
-
-    while not all([condition(variable, **kwargs) for condition in conditions]):
-        variable = input(question)
-
-        for condition, error_msg in zip(conditions, error_msgs):
-            if not condition(variable, **kwargs):
-                print(error_msg)
-    
-    return variable
-
+from project.utils.dummy_players import define_players
+from project.utils.std_input import validate_input, load_mode_check, card_format_check, is_holding_check
 
 if __name__ == "__main__":
     N_player, S_player, E_player, W_player = define_players()
@@ -119,6 +64,6 @@ if __name__ == "__main__":
         print(f"\n\nYour score is {your_score} out of {max_score}")
         print(f'Your overall score is {your_cum_sum_point}/{cum_sum_point} = {int(100*your_cum_sum_point/cum_sum_point)}%\n{"=" * 40}')
 
-        is_next = input("\nOne more? [y/n] ")
+        is_next = input("\nNext? [y/n] ")
         if is_next != "y":
             break
