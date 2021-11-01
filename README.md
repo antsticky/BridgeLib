@@ -12,5 +12,6 @@ For this repository a few examples are attached, see [Examples](https://github.c
 
 ## External Links
 -  **Bo Haglund**'s and **Soren Hein**'s double dummy solver - [C++ implementation](https://github.com/dds-bridge/dds)
-- **Foppe Hemminga**'s python interface for the double dummy solver -[Python Interface](https://github.com/Afwas/python-dds)
+- **Foppe Hemminga**'s python interface for the double dummy solver - [Python Interface](https://github.com/Afwas/python-dds)
 - How 'Double Dummy' Started, and a Question It Could Raise - [NYTimes article](https://www.nytimes.com/2005/01/29/crosswords/bridge/how-double-dummy-started-and-a-question-it-could-raise.html)
+- The αμ Search Algorithm for the Game of Bridge [arXiv:1911.07960](https://arxiv.org/abs/1911.07960)
