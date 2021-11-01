@@ -11,5 +11,5 @@ For this repository a few examples are attached, see [Examples](https://github.c
 
 
 ## Links
--  **Linus Hein**'s double dummy solver - [C++ implementation](http://privat.bahnhof.se/wb758135/)
-- **Bo Haglund**'s and **Soren Hein**'s python interface for the double dummy solver -[Python Interface](https://github.com/dds-bridge/dds)
+-  **Bo Haglund**'s and **Soren Hein**'s double dummy solver - [C++ implementation](https://github.com/dds-bridge/dds)
+- **Foppe Hemminga**'s python interface for the double dummy solver -[Python Interface](https://github.com/Afwas/python-dds)
