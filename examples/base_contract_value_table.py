@@ -9,15 +9,15 @@ if __name__ == "__main__":
     is_dbl = True
     is_rdbl = False
 
-    test_contracts = []
+    contracts = []
     for suit in suits:
         contract_str = str(bid_level) + suit
-        test_contracts.append(Contract("N", Bid(contract_str), is_dbl, is_rdbl, vul))
+        contracts.append(Contract("N", Bid(contract_str), is_dbl, is_rdbl, vul))
 
     for i in range(14):
         print(f"{i})", end="\t")
 
-        for contract in test_contracts:
+        for contract in contracts:
             value = contract.value(tricks=i)
             print(value, end="\t")
 
