@@ -4,7 +4,7 @@ With this package one can analyze his/her play in the **Hungarian Championship**
 
 The `project/base` folder contains all the necessary libraries which need for a basic play with seating, bidding, and playing a pre-defined or randomly shuffered board. The `project/analytics` provides an interface with the online commentator program and containes a double dummy solver.
 
-:warning: **If you are using mobile browser**: Be very careful here!
+:warning: **Do not** forgot to build the DDS package before use it, for installation steps reach the [manual](https://github.com/antsticky/BridgeLib/tree/main/project/analytics/dds_project)
 
 ## Examples
 For this repository a few examples are attached, see [Examples](https://github.com/antsticky/BridgeLib/tree/main/examples).
